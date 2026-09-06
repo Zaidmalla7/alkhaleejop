@@ -361,3 +361,31 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/alkhaleejop/Properties/launchSettings.json
+/alkhaleejop/Properties/serviceDependencies.json
+/alkhaleejop/Properties/serviceDependencies.local.json
+/alkhaleejop/wwwroot/uploads/glasses/2ab693ce-14f5-4f28-9f5a-b1e989839574.webp
+/alkhaleejop/wwwroot/uploads/glasses/56e7ffb6-f6fc-4c29-9da5-6cc420200733.webp
+/alkhaleejop/wwwroot/uploads/glasses/7f02f9b5-5173-4116-aa4f-00a4cd25a9a3.webp
+/alkhaleejop/wwwroot/uploads/glasses/a4a693a9-bd2b-4b2d-b9e1-fa1553bb318a.webp
+/alkhaleejop/wwwroot/uploads/glasses/c5873b5b-07fc-42a5-b486-e20eff9d2925.webp
+/alkhaleejop/wwwroot/uploads/glasses/c611b531-1df3-458b-b32a-1919c925794e.webp
+/alkhaleejop/wwwroot/uploads/glasses/ecf7ad61-02ea-4510-b071-cee5a810596b.webp
+/alkhaleejop/Areas/Identity/Pages/Account/AccessDenied.cshtml
+/alkhaleejop/Areas/Identity/Pages/Account/ConfirmEmail.cshtml
+/alkhaleejop/Data/Migrations/00000000000000_CreateIdentitySchema.cs
+/alkhaleejop/Data/Migrations/ApplicationDbContextModelSnapshot.cs
+/alkhaleejop/Areas/Identity/Pages/Account/ResetPasswordConfirmation.cshtml
+/alkhaleejop/Areas/Identity/Pages/Account/ResetPassword.cshtml
+/alkhaleejop/Areas/Identity/Pages/Account/ResendEmailConfirmation.cshtml
+/alkhaleejop/Areas/Identity/Pages/Account/RegisterConfirmation.cshtml
+/alkhaleejop/Areas/Identity/Pages/Account/Register.cshtml
+/alkhaleejop/Areas/Identity/Pages/Account/Register.cshtml.cs
+/alkhaleejop/Areas/Identity/Pages/Account/RegisterConfirmation.cshtml.cs
+/alkhaleejop/Areas/Identity/Pages/Account/Logout.cshtml
+/alkhaleejop/Areas/Identity/Pages/Account/ForgotPasswordConfirmation.cshtml
+/alkhaleejop/Areas/Identity/Pages/Account/ForgotPassword.cshtml
+/alkhaleejop/Areas/Identity/Pages/Account/ExternalLogin.cshtml
+/alkhaleejop/Areas/Identity/Pages/Account/ConfirmEmailChange.cshtml
+/alkhaleejop/appsettings.json
+/alkhaleejop/appsettings.Development.json
