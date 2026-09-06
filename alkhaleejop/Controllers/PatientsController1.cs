@@ -74,7 +74,6 @@ namespace alkhaleejop.Controllers
             }
         }
 
-        // تم تعديل هذه الدالة لتتقبل الـ ID سواء تم إرساله كـ Route أو كـ QueryString لمنع أي خطأ
         [HttpGet]
         [Route("PatientsController1/GetPatientById/{id?}")]
         public async Task<IActionResult> GetPatientById(int id)

@@ -938,9 +938,7 @@
         }).fail(function() { $('#quickHistoryLoading').addClass('d-none'); Swal.fire('خطأ!', 'لا يمكن الاتصال بالخادم.', 'error'); });
         }
 
-        // ===============================================
-        // التعديل: سؤال تجديد الموعد لمدة 6 شهور
-        // ===============================================
+        
         function markAsContacted(examId) {
         let btn = $(`#notif-card-${examId} .btn-done`);
         let originalContent = btn.html();
@@ -956,7 +954,7 @@
         cancelButtonText: 'لا، فقط أخفِ التنبيه ✖️'
         }).then((result) => {
         if (result.isDismissed && result.dismiss !== Swal.DismissReason.cancel) {
-        return; // تم الإغلاق بدون اختيار
+        return; 
         }
 
         let renew = result.isConfirmed; // true لو نعم، false لو لا

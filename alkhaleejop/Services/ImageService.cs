@@ -39,7 +39,6 @@ namespace alkhaleejop.Services
             if (!_allowedMimeTypes.Contains(file.ContentType))
                 throw new InvalidOperationException("نوع الملف (MIME type) غير مقبول أمنياً.");
 
-            // تم تعديل المسار ليناسب النظارات/الفحوصات
             var uploadPath = Path.Combine(_env.WebRootPath, "uploads", "glasses");
             if (!Directory.Exists(uploadPath))
             {
@@ -53,7 +52,6 @@ namespace alkhaleejop.Services
             {
                 using (var image = await SixLabors.ImageSharp.Image.LoadAsync(stream))
                 {
-                    // كبرنا الحجم لـ 600 عشان تفاصيل النظارة تكون أوضح
                     image.Mutate(x => x.Resize(new ResizeOptions
                     {
                         Size = new Size(600, 600),
@@ -62,7 +60,7 @@ namespace alkhaleejop.Services
 
                     var encoder = new WebpEncoder
                     {
-                        Quality = 80 // رفعنا الجودة نتفة صغيرة
+                        Quality = 80 
                     };
 
                     using (var fileStream = new FileStream(fullPath, FileMode.Create, FileAccess.Write, FileShare.Read))

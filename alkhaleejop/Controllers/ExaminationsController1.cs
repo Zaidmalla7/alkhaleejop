@@ -41,7 +41,6 @@ namespace alkhaleejop.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreatePatientQuickly(string firstName, string fatherName, string familyName, string phoneNumber, int age, string address)
         {
-            // التأكد من أن جميع الحقول المطلوبة غير فارغة
             if (string.IsNullOrWhiteSpace(firstName) || string.IsNullOrWhiteSpace(fatherName) || string.IsNullOrWhiteSpace(familyName) ||
                 string.IsNullOrWhiteSpace(phoneNumber) || string.IsNullOrWhiteSpace(address) || age <= 0)
             {
@@ -63,7 +62,6 @@ namespace alkhaleejop.Controllers
                 _context.Patients.Add(newPatient);
                 await _context.SaveChangesAsync();
 
-                // نرجع الـ ID والاسم عشان نختارهم تلقائياً في قائمة البحث (Select2)
                 return Json(new
                 {
                     success = true,
@@ -306,8 +304,8 @@ namespace alkhaleejop.Controllers
                                 e.NextExamDate <= today.AddDays(14))
                     .OrderBy(e => e.NextExamDate)
                     .Select(e => new {
-                        id = e.Id, // رقم الفحص
-                        patientId = e.PatientId, // <--- هذا السطر السحري اللي كان ناقص!
+                        id = e.Id, 
+                        patientId = e.PatientId, 
                         patientName = e.Patient.FirstName + " " + e.Patient.FamilyName,
                         phone = e.Patient.PhoneNumber,
                         secondaryPhone = e.Patient.SecondaryPhoneNumber,
@@ -325,8 +323,6 @@ namespace alkhaleejop.Controllers
             }
         }
 
-        // 9. تسجيل أنه تم التواصل
-        // 10. تسجيل أنه تم التواصل (مع خيار التجديد التلقائي لـ 6 أشهر)
         [HttpPost]
         public async Task<IActionResult> MarkAsContacted(int id, bool renewForSixMonths = false)
         {
@@ -335,13 +331,11 @@ namespace alkhaleejop.Controllers
             {
                 if (renewForSixMonths)
                 {
-                    // تجديد الموعد لـ 6 شهور من تاريخ اليوم
                     exam.NextExamDate = DateTime.UtcNow.AddHours(3).AddMonths(6);
-                    exam.IsReminderSent = false; // نخليه false عشان يرجع ينبهه بس يجي وقته الجديد
+                    exam.IsReminderSent = false; 
                 }
                 else
                 {
-                    // إنهاء التنبيه نهائياً (الوضع الطبيعي)
                     exam.IsReminderSent = true;
                 }
 
@@ -350,14 +344,13 @@ namespace alkhaleejop.Controllers
             }
             return Json(new { success = false });
         }
-        // 9. تصدير المواعيد لملف إكسيل (CSV يدعم اللغة العربية)
         [HttpGet]
         public async Task<IActionResult> ExportWeeklyRemindersExcel()
         {
             try
             {
                 var today = DateTime.UtcNow.AddHours(3).Date;
-                var nextWeek = today.AddDays(7); // نجلب المواعيد للأسبوع الحالي (لـ 7 أيام قادمة بالإضافة للمتأخرة)
+                var nextWeek = today.AddDays(7); 
 
                 var reminders = await _context.Examinations
                     .Include(e => e.Patient)
@@ -370,7 +363,6 @@ namespace alkhaleejop.Controllers
 
                 var builder = new StringBuilder();
 
-                // ترويسة الجدول
                 builder.AppendLine("اسم العميل,رقم الهاتف الأساسي,الهاتف الاحتياطي,لمن الرقم الاحتياطي,تاريخ الموعد,حالة الموعد");
 
                 foreach (var item in reminders)
@@ -390,7 +382,6 @@ namespace alkhaleejop.Controllers
                     builder.AppendLine($"{patientName},{phone},{secPhone},{secOwner},{examDate},{status}");
                 }
 
-                // إضافة (UTF-8 BOM) عشان برنامج مايكروسوفت إكسيل يتعرف على الحروف العربية صح
                 var bom = new byte[] { 0xEF, 0xBB, 0xBF };
                 var bytes = Encoding.UTF8.GetBytes(builder.ToString());
                 var result = new byte[bom.Length + bytes.Length];
@@ -406,7 +397,6 @@ namespace alkhaleejop.Controllers
                 return Content("حدث خطأ أثناء إعداد الملف، يرجى المحاولة لاحقاً.");
             }
         }
-        // 10. التراجع عن التواصل
         [HttpPost]
         public async Task<IActionResult> UndoContacted(int id)
         {

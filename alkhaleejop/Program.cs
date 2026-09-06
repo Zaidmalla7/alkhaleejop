@@ -15,9 +15,7 @@ namespace alkhaleejop
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
 
-            // === التعديل صار هون: رح يقرأ من متغيرات البيئة أول، وإذا ما لقاها بروح لملف appsettings ===
             var connectionString = Environment.GetEnvironmentVariable("DB_CONNECTION_STRING")
                                    ?? builder.Configuration.GetConnectionString("DefaultConnection22")
                                    ?? throw new InvalidOperationException("Connection string not found.");
@@ -39,11 +37,8 @@ namespace alkhaleejop
             });
             builder.Services.ConfigureApplicationCookie(options =>
             {
-                // تحديد مدة بقاء تسجيل الدخول (مثلاً 30 يوم)
                 options.ExpireTimeSpan = TimeSpan.FromDays(30);
 
-                // تجديد الوقت تلقائياً: 
-                // يعني لو دخل في اليوم الـ 29، النظام برجع يمددله كمان 30 يوم
                 options.SlidingExpiration = true;
             });
             builder.Services.AddScoped<alkhaleejop.Services.IImageService, alkhaleejop.Services.ImageService>();
@@ -55,8 +50,7 @@ namespace alkhaleejop
 
             app.UseHttpsRedirection();
 
-            // ==========================================
-            // التعديل هنا: هذا السطر ضروري جداً لعرض الصور المرفوعة
+           
             app.UseStaticFiles();
             // ==========================================
 

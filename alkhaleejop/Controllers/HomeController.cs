@@ -39,7 +39,6 @@ namespace alkhaleejop.Controllers
             {
                 var today = DateTime.UtcNow.AddHours(3).Date;
 
-                // 1. الأرقام السريعة (KPIs)
                 var totalPatients = await _context.Patients.CountAsync();
                 var totalExams = await _context.Examinations.CountAsync();
 
@@ -49,7 +48,6 @@ namespace alkhaleejop.Controllers
                 var pendingReminders = await _context.Examinations
                     .CountAsync(e => e.NextExamDate != null && e.NextExamDate >= today && e.NextExamDate <= today.AddDays(14) && e.IsReminderSent == false);
 
-                // 2. الرسم البياني (نمو الفحوصات آخر 6 شهور)
                 var sixMonthsAgo = today.AddMonths(-5);
                 var recentExamsForChart = await _context.Examinations
                     .Where(e => e.ExamDate >= new DateTime(sixMonthsAgo.Year, sixMonthsAgo.Month, 1))
@@ -59,7 +57,6 @@ namespace alkhaleejop.Controllers
                 var chartLabels = new List<string>();
                 var chartData = new List<int>();
 
-                // جلب أسماء الأشهر بالعربي
                 string[] arabicMonths = { "يناير", "فبراير", "مارس", "أبريل", "مايو", "يونيو", "يوليو", "أغسطس", "سبتمبر", "أكتوبر", "نوفمبر", "ديسمبر" };
 
                 for (int i = 5; i >= 0; i--)
@@ -69,7 +66,6 @@ namespace alkhaleejop.Controllers
                     chartData.Add(recentExamsForChart.Count(e => e.Year == m.Year && e.Month == m.Month));
                 }
 
-                // 3. أحدث 5 زيارات
                 var recentVisits = await _context.Examinations
                     .Include(e => e.Patient)
                     .OrderByDescending(e => e.ExamDate)
@@ -78,7 +74,7 @@ namespace alkhaleejop.Controllers
                         patientName = e.Patient.FirstName + " " + e.Patient.FamilyName,
                         date = e.ExamDate.ToString("yyyy/MM/dd"),
                         isVip = e.Patient.IsVIP,
-                        phoneNumber = e.Patient.PhoneNumber // <--- ضفنا هذا السطر عشان نجيب رقم الزبون
+                        phoneNumber = e.Patient.PhoneNumber 
                     })
                     .ToListAsync();
 
