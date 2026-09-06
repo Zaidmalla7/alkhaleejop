@@ -1,0 +1,40 @@
+﻿@using alkhaleejop.Data
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
+@if (SignInManager.IsSignedIn(User))
+{
+    <div class="dropdown user-profile-dropdown">
+        <a class="d-flex align-items-center text-decoration-none" href="#" role="button" id="userMenu" data-bs-toggle="dropdown" aria-expanded="false" style="gap: 12px;">
+
+            <div class="user-avatar-circle">
+                <i class="fa-solid fa-user-tie"></i>
+            </div>
+
+            <div class="user-info d-none d-sm-flex flex-column align-items-start">
+                <span class="user-role-title text-dark fw-bold">مدير النظام</span>
+                <span class="user-email-text text-muted" style="direction: ltr;">@User.Identity?.Name</span>
+            </div>
+
+            <i class="fa-solid fa-chevron-down text-muted" style="font-size: 0.75rem; margin-right: 5px;"></i>
+        </a>
+
+        <ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-3 rounded-4" aria-labelledby="userMenu">
+         
+            <li>
+                <form class="form-inline m-0" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                    <button type="submit" class="dropdown-item py-2 text-danger fw-bold w-100 text-end">
+                        <i class="fa-solid fa-arrow-right-from-bracket ms-2"></i> تسجيل الخروج
+                    </button>
+                </form>
+            </li>
+        </ul>
+    </div>
+}
+else
+{
+    <a class="btn btn-primary px-4 py-2 rounded-pill fw-bold shadow-sm" asp-area="Identity" asp-page="/Account/Login">
+        تسجيل الدخول <i class="fa-solid fa-arrow-left me-2"></i>
+    </a>
+}

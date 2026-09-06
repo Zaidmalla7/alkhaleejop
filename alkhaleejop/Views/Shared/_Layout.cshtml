@@ -1,0 +1,998 @@
+﻿<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+    <meta name="keywords" content="بصريات, نظارات, فحص نظر, الخليج للبصريات, إدارة عملاء, CRM, مواعيد" />
+    <meta name="author" content="الخليج للبصريات" />
+    <meta name="theme-color" content="#7a1c4b" />
+
+    <meta property="og:title" content="نظام الخليج للبصريات" />
+    <meta property="og:description" content="نظام متكامل لإدارة سجلات عملاء الخليج للبصريات." />
+    <meta property="og:image" content="~/imges/logo.png" />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="ar_AR" />
+
+    <link rel="icon" type="image/png" href="~/imges/logo.png" />
+    <link rel="shortcut icon" type="image/png" href="~/imges/logo.png" />
+    <link rel="apple-touch-icon" href="~/imges/logo.png" />
+
+    <title>@ViewData["Title"] - نظام الخليج للبصريات</title>
+
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.bootstrap5.min.css" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.bootstrap5.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+
+    <style>
+            :root {
+                --brand-color: #7a1c4b;
+                --brand-light: #fdf5f8;
+                --bg-app: #f4f6f9;
+                --sidebar-width: 260px;
+                --text-main: #2b3445;
+                --text-muted: #7d879c;
+                --border-color: #e3e9ef;
+            }
+
+            body {
+                font-family: 'Cairo', sans-serif;
+                background-color: var(--bg-app);
+                color: var(--text-main);
+                overflow-x: hidden;
+            }
+
+            .swal2-container {
+                z-index: 9999 !important;
+            }
+
+            .sidebar {
+                width: var(--sidebar-width);
+                background-color: #ffffff;
+                height: 100vh;
+                position: fixed;
+                top: 0;
+                right: 0;
+                border-left: 1px solid var(--border-color);
+                z-index: 1050;
+                transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                display: flex;
+                flex-direction: column;
+            }
+
+            .sidebar-header {
+                height: 85px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border-bottom: 1px solid var(--border-color);
+                padding: 0 1.5rem;
+            }
+
+                .sidebar-header img {
+                    max-height: 50px;
+                    border-radius: 10px;
+                    transition: transform 0.3s ease;
+                }
+
+                    .sidebar-header img:hover {
+                        transform: scale(1.03);
+                    }
+
+            .sidebar-nav {
+                padding: 1.5rem 1rem;
+                flex-grow: 1;
+                overflow-y: auto;
+            }
+
+            .nav-category {
+                font-size: 0.75rem;
+                text-transform: uppercase;
+                color: var(--text-muted);
+                font-weight: 800;
+                margin: 1.5rem 1rem 0.5rem 1rem;
+                letter-spacing: 0.5px;
+            }
+
+            .nav-item-link {
+                display: flex;
+                align-items: center;
+                padding: 0.8rem 1rem;
+                color: var(--text-main);
+                text-decoration: none;
+                border-radius: 8px;
+                font-weight: 600;
+                font-size: 0.95rem;
+                margin-bottom: 0.3rem;
+                transition: all 0.2s ease;
+            }
+
+                .nav-item-link i {
+                    width: 25px;
+                    font-size: 1.1rem;
+                    margin-left: 12px;
+                    color: var(--text-muted);
+                    text-align: center;
+                }
+
+                .nav-item-link:hover {
+                    background-color: #f3f4f7;
+                    color: var(--brand-color);
+                }
+
+                    .nav-item-link:hover i {
+                        color: var(--brand-color);
+                    }
+
+                .nav-item-link.active {
+                    background-color: var(--brand-light);
+                    color: var(--brand-color);
+                }
+
+                    .nav-item-link.active i {
+                        color: var(--brand-color);
+                    }
+
+            .main-content {
+                margin-right: var(--sidebar-width);
+                min-height: 100vh;
+                display: flex;
+                flex-direction: column;
+                transition: margin 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            }
+
+            .top-header {
+                height: 80px;
+                background-color: #ffffff;
+                border-bottom: 1px solid var(--border-color);
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 0 2rem;
+                position: sticky;
+                top: 0;
+                z-index: 1020;
+                box-shadow: 0 2px 10px rgba(0,0,0,0.015);
+            }
+
+            .system-brand-title {
+                color: var(--brand-color);
+                font-weight: 800;
+                font-size: 1.2rem;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+            }
+
+            .menu-toggle-btn {
+                display: none;
+                background: none;
+                border: none;
+                color: var(--text-main);
+                font-size: 1.4rem;
+                cursor: pointer;
+                padding: 0.5rem;
+                transition: color 0.2s;
+            }
+
+                .menu-toggle-btn:hover {
+                    color: var(--brand-color);
+                }
+
+            .notif-btn {
+                position: relative;
+                background: #f4f6f9;
+                border: 1px solid #e3e9ef;
+                width: 42px;
+                height: 42px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: #495057;
+                font-size: 1.2rem;
+                transition: all 0.2s ease;
+            }
+
+                .notif-btn:hover {
+                    background: #e3e9ef;
+                    color: var(--brand-color);
+                    transform: translateY(-2px);
+                }
+
+            .notif-badge {
+                position: absolute;
+                top: -3px;
+                right: -3px;
+                background-color: #ef4444;
+                color: white;
+                font-size: 0.65rem;
+                font-weight: 800;
+                width: 18px;
+                height: 18px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border: 2px solid #fff;
+                box-shadow: 0 2px 5px rgba(239,68,68,0.4);
+            }
+
+            /* --- تنسيقات التنبيهات الجانبية --- */
+            .notif-item {
+                background: #fff;
+                border: 1px solid #eaedf2;
+                border-radius: 12px;
+                padding: 1.2rem;
+                margin-bottom: 1rem;
+                transition: transform 0.2s;
+                position: relative;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+            }
+
+            .status-overdue {
+                border-right: 4px solid #ef4444;
+                background: #fffcfc;
+            }
+
+            .status-today {
+                border-right: 4px solid #f59e0b;
+                background: #fffdf5;
+            }
+
+            .status-upcoming {
+                border-right: 4px solid #3b82f6;
+                background: #f5f8ff;
+            }
+
+            .btn-done {
+                background-color: #f8fafc;
+                color: #334155;
+                border: 1px solid #cbd5e1;
+                border-radius: 8px;
+                padding: 0.6rem;
+                transition: all 0.2s;
+                cursor: pointer;
+            }
+
+                .btn-done:hover {
+                    background-color: #f1f5f9;
+                    border-color: #94a3b8;
+                    transform: translateY(-1px);
+                }
+
+            /* --- تنسيقات الموديلات الإضافية (السجل الطبي) --- */
+            .history-timeline {
+                position: relative;
+                padding: 20px 0;
+            }
+
+                .history-timeline::before {
+                    content: '';
+                    position: absolute;
+                    top: 0;
+                    right: 28px;
+                    width: 3px;
+                    height: 100%;
+                    background: linear-gradient(180deg, #a855f7 0%, #e2e8f0 15%, #e2e8f0 100%);
+                    border-radius: 5px;
+                }
+
+            .history-item {
+                position: relative;
+                margin-bottom: 2rem;
+                padding-right: 70px;
+            }
+
+            .history-dot {
+                position: absolute;
+                top: 0;
+                right: 12px;
+                width: 36px;
+                height: 36px;
+                border-radius: 50%;
+                background-color: #a855f7;
+                color: white;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                box-shadow: 0 0 0 6px #fcfcfd, 0 4px 6px rgba(0,0,0,0.1);
+                z-index: 2;
+                font-size: 14px;
+            }
+
+            .history-content {
+                background: #fff;
+                border: 1px solid #eaedf2;
+                border-radius: 16px;
+                padding: 1.5rem;
+                box-shadow: 0 10px 25px -5px rgba(0,0,0,0.02);
+            }
+
+            .history-date {
+                font-weight: 800;
+                color: #1e293b;
+                font-size: 1.15rem;
+                margin: 0;
+            }
+
+            .eye-record-box {
+                border: 1px solid #eaedf2;
+                border-radius: 12px;
+                padding: 1rem;
+                background: #fdfdfe;
+                height: 100%;
+            }
+
+            .od-box {
+                border-top: 3px solid #dc2626;
+            }
+
+            .os-box {
+                border-top: 3px solid #2563eb;
+            }
+
+            .eye-record-title {
+                font-weight: 800;
+                font-size: 0.9rem;
+                margin-bottom: 15px;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+            }
+
+            .od-box .eye-record-title {
+                color: #dc2626;
+            }
+
+            .os-box .eye-record-title {
+                color: #2563eb;
+            }
+
+            .measurements-row {
+                display: flex;
+                justify-content: space-between;
+                flex-wrap: wrap;
+                gap: 5px;
+                direction: ltr;
+            }
+
+            .measure-col {
+                flex: 1;
+                text-align: center;
+                min-width: 45px;
+            }
+
+                .measure-col span {
+                    display: block;
+                    color: #64748b;
+                    font-size: 0.75rem;
+                    font-weight: 700;
+                    margin-bottom: 3px;
+                }
+
+                .measure-col strong {
+                    font-size: 0.95rem;
+                    color: #1e293b;
+                    direction: ltr;
+                    display: inline-block;
+                    background: #f8fafc;
+                    padding: 4px 8px;
+                    border-radius: 6px;
+                    border: 1px solid #eaedf2;
+                    width: 100%;
+                }
+
+            .val-empty {
+                color: #94a3b8 !important;
+                font-style: italic;
+                font-weight: normal !important;
+                background: transparent !important;
+                border: 1px dashed #cbd5e1 !important;
+            }
+
+            .exam-details-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                gap: 15px;
+                margin-top: 1rem;
+                padding-top: 1rem;
+                border-top: 1px dashed #eaedf2;
+            }
+
+            .detail-item label {
+                display: block;
+                font-size: 0.8rem;
+                color: #64748b;
+                font-weight: 700;
+                margin-bottom: 4px;
+            }
+
+            .detail-item div {
+                font-size: 0.95rem;
+                color: #334155;
+                font-weight: 600;
+                background: #f8fafc;
+                padding: 8px 12px;
+                border-radius: 8px;
+                border: 1px solid #eaedf2;
+                white-space: pre-line;
+            }
+
+            .detail-empty {
+                color: #94a3b8 !important;
+                font-style: italic;
+                font-weight: normal !important;
+            }
+
+            .glass-attachment {
+                background: #f8fafc;
+                border: 1px dashed #cbd5e1;
+                border-radius: 12px;
+                padding: 1rem;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                margin-top: 1.2rem;
+            }
+
+                .glass-attachment img {
+                    width: 70px;
+                    height: 70px;
+                    object-fit: cover;
+                    border-radius: 8px;
+                    border: 1px solid #eaedf2;
+                    cursor: pointer;
+                }
+
+            .page-container {
+                padding: 2rem 2.5rem;
+                flex-grow: 1;
+            }
+
+            @@media (max-width: 991.98px) {
+                .sidebar {
+                    transform: translateX(100%);
+                }
+
+                    .sidebar.open {
+                        transform: translateX(0);
+                    }
+
+                .main-content {
+                    margin-right: 0;
+                }
+
+                .menu-toggle-btn {
+                    display: block;
+                }
+
+                .top-header {
+                    padding: 0 1.5rem;
+                }
+
+                .page-container {
+                    padding: 1.5rem 1rem;
+                }
+
+                .system-brand-title span {
+                    display: none;
+                }
+
+                .sidebar-backdrop {
+                    display: none;
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    right: 0;
+                    bottom: 0;
+                    background-color: rgba(15, 23, 42, 0.4);
+                    backdrop-filter: blur(3px);
+                    z-index: 1040;
+                }
+
+                    .sidebar-backdrop.show {
+                        display: block;
+                    }
+            }
+
+            .app-footer {
+                background-color: transparent;
+                border-top: 1px solid var(--border-color);
+                padding: 1.2rem 2.5rem;
+                margin-top: auto;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                font-size: 0.85rem;
+            }
+
+                .app-footer .copyright {
+                    color: var(--text-muted);
+                    font-weight: 600;
+                }
+
+                    .app-footer .copyright strong {
+                        color: var(--brand-color);
+                    }
+
+            @@media (max-width: 767.98px) {
+                .app-footer {
+                    flex-direction: column;
+                    gap: 10px;
+                    text-align: center;
+                    padding: 1.2rem 1rem;
+                }
+            }
+    </style>
+</head>
+<body>
+
+    <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
+    <aside class="sidebar" id="appSidebar">
+        <div class="sidebar-header">
+            <img src="~/imges/logo.png" alt="الخليج للبصريات" />
+        </div>
+
+        <div class="sidebar-nav">
+            <div class="nav-category">الرئيسية</div>
+            <a href="/" class="nav-item-link active">
+                <i class="fa-solid fa-chart-pie"></i> لوحة القيادة
+            </a>
+
+            <div class="nav-category">إدارة النظام</div>
+            <a asp-controller="PatientsController1" asp-action="index" class="nav-item-link">
+                <i class="fa-solid fa-users"></i> سجل العملاء
+            </a>
+            <a asp-controller="ExaminationsController1" asp-action="index" class="nav-item-link">
+                <i class="fa-solid fa-clipboard-list"></i> الفحوصات والقياسات
+            </a>
+        </div>
+    </aside>
+
+    <div class="main-content">
+        <header class="top-header">
+            <div class="d-flex align-items-center gap-3">
+                <button class="menu-toggle-btn" id="menuToggleBtn">
+                    <i class="fa-solid fa-bars-staggered"></i>
+                </button>
+                <div class="system-brand-title d-none d-sm-flex">
+                    <i class="fa-solid fa-glasses"></i>
+                    <span>نظام إدارة الخليج للبصريات</span>
+                </div>
+            </div>
+
+            <div class="d-flex align-items-center gap-3">
+                <button class="notif-btn" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNotifications" aria-controls="offcanvasNotifications">
+                    <i class="fa-regular fa-bell"></i>
+                    <span class="notif-badge d-none" id="notifBadgeCount">0</span>
+                </button>
+
+                <partial name="_LoginPartial" />
+            </div>
+        </header>
+
+        <main class="page-container">
+            @RenderBody()
+        </main>
+
+        <footer class="app-footer">
+            <div class="copyright">
+                &copy; 2026 <strong>الخليج للبصريات</strong>.
+            </div>
+            <div class="system-info" style="color: var(--text-muted); font-weight:600;">نظام إدارة علاقات العملاء (CRM)</div>
+        </footer>
+    </div>
+
+    <!-- قائمة التنبيهات الجانبية -->
+    <div class="offcanvas offcanvas-start shadow-lg" tabindex="-1" id="offcanvasNotifications" style="width: 400px; border-right: none;">
+        <div class="offcanvas-header align-items-center" style="background-color: #fff; border-bottom: 1px solid var(--border-color);">
+            <h5 class="offcanvas-title fw-bold mb-0" style="color: var(--brand-color);">
+                <i class="fa-solid fa-bell me-2"></i> مواعيد المتابعة
+            </h5>
+
+            <!-- زر التصدير لإكسيل -->
+            <div class="ms-auto me-3">
+                <button type="button" class="btn btn-sm btn-success d-flex align-items-center gap-2 shadow-sm" onclick="exportWeeklyReminders()" title="تحميل مواعيد الأسبوع بصيغة إكسيل" style="font-weight: 700;">
+                    <i class="fa-solid fa-file-excel"></i> <span>إكسيل</span>
+                </button>
+            </div>
+
+            <button type="button" class="btn-close m-0" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body p-3" style="background-color: var(--bg-app);" id="notificationsContainer">
+            <div class="text-center text-muted mt-5">
+                <div class="spinner-border spinner-border-sm text-primary mb-2"></div>
+                <p>جاري فحص المواعيد...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- موديل عرض بيانات العميل السريعة -->
+    <div class="modal fade custom-quick-modal" id="quickPatientDetailsModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow-lg rounded-4">
+                <div class="modal-header bg-light border-bottom-0 pb-3 mt-1 rounded-top-4">
+                    <h5 class="modal-title fw-bold text-primary">
+                        <i class="fa-solid fa-user me-2"></i> ملف العميل السريع
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <div id="quickPatientDetailsBody">
+                        <div class="text-center py-3"><div class="spinner-border text-primary"></div></div>
+                    </div>
+                </div>
+                <div class="modal-footer border-top-0 pt-0 px-4 pb-4">
+                    <button type="button" class="btn btn-light rounded-3 px-4 py-2 fw-bold" data-bs-dismiss="modal">إغلاق</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- موديل عرض السجل الطبي -->
+    <div class="modal fade custom-quick-modal" id="quickHistoryModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-xl modal-dialog-scrollable">
+            <div class="modal-content border-0 shadow-lg rounded-4">
+                <div class="modal-header bg-light border-bottom-0 pb-3 mt-1 rounded-top-4">
+                    <h5 class="modal-title fw-bold" style="color: #a855f7;">
+                        <i class="fa-solid fa-book-medical me-2"></i> سجل وصفات العميل: <span id="quickHistoryPatientName" class="text-dark"></span>
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4 bg-light" style="background-color: #fcfcfd !important;">
+                    <div id="quickHistoryLoading" class="text-center py-5 d-none">
+                        <div class="spinner-border" style="color: #a855f7;" role="status"></div>
+                        <p class="mt-2 text-muted fw-bold">جاري جلب السجل الطبي...</p>
+                    </div>
+                    <div id="quickHistoryEmpty" class="text-center py-5 d-none">
+                        <i class="fa-regular fa-folder-open text-muted mb-3" style="font-size: 4rem; opacity: 0.5;"></i>
+                        <h5 class="text-muted fw-bold">لا يوجد سجل فحوصات حتى الآن.</h5>
+                    </div>
+                    <div id="quickHistoryTimelineContainer" class="history-timeline d-none"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- موديل تكبير الصورة -->
+    <div class="modal fade" id="quickImagePreviewModal" tabindex="-1" aria-hidden="true" style="z-index: 1150;">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow-lg rounded-4 bg-transparent">
+                <div class="modal-header border-bottom-0 p-3 position-absolute w-100" style="z-index: 10;">
+                    <button type="button" class="btn-close btn-close-white bg-dark rounded-circle p-2" data-bs-dismiss="modal" aria-label="Close" style="opacity: 0.8;"></button>
+                </div>
+                <div class="modal-body p-0 text-center">
+                    <img id="quickEnlargedImageDisplay" src="" class="img-fluid rounded-4 shadow" style="max-height: 80vh; object-fit: contain; background: #fff;" />
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.5.0/js/responsive.bootstrap5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.bootstrap5.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.print.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+        const toggleBtn = document.getElementById('menuToggleBtn');
+        const sidebar = document.getElementById('appSidebar');
+        const backdrop = document.getElementById('sidebarBackdrop');
+
+        function toggleSidebar() {
+        sidebar.classList.toggle('open');
+        backdrop.classList.toggle('show');
+        }
+
+        if(toggleBtn) toggleBtn.addEventListener('click', toggleSidebar);
+        if(backdrop) backdrop.addEventListener('click', toggleSidebar);
+
+        loadSmartNotifications();
+
+        // خدعة ذكية بالجافاسكربت لضمان عدم تعليق الشاشة
+        $('.custom-quick-modal').on('show.bs.modal', function () {
+        var zIndex = 1090 + (10 * $('.modal:visible').length);
+        $(this).css('z-index', zIndex);
+        setTimeout(function() {
+        $('.modal-backdrop').not('.custom-modal-backdrop').last().css('z-index', zIndex - 1).addClass('custom-modal-backdrop');
+        }, 0);
+        });
+        });
+
+        // دالة التصدير للإكسيل
+        function exportWeeklyReminders() {
+        window.location.href = '/ExaminationsController1/ExportWeeklyRemindersExcel';
+        }
+
+        function generateWaLink(phone, message) {
+        if (!phone) return '#';
+        let pStr = phone.replace(/\D/g, '');
+        if (pStr.startsWith('07') && pStr.length === 10) { pStr = '962' + pStr.substring(1); }
+        else if (pStr.startsWith('7') && pStr.length === 9) { pStr = '962' + pStr; }
+        else if (pStr.startsWith('00962')) { pStr = pStr.substring(2); }
+        return `https://wa.me/${pStr}?text=${message}`;
+        }
+
+        function loadSmartNotifications() {
+        $.get('/ExaminationsController1/GetUpcomingReminders')
+        .done(function (res) {
+        var container = $('#notificationsContainer');
+        container.empty();
+
+        if (!res.success || res.data.length === 0) {
+        $('#notifBadgeCount').addClass('d-none');
+        container.html(`
+        <div class="text-center text-muted mt-5 pt-4">
+        <i class="fa-solid fa-mug-hot" style="font-size: 3rem; color: #cbd5e1; margin-bottom: 15px;"></i>
+        <h6 class="fw-bold text-dark">لا يوجد مواعيد معلقة!</h6>
+        <p class="small">كل الزبائن تمت متابعتهم، استمتع بقهوتك.</p>
+        </div>
+        `);
+        return;
+        }
+
+        $('#notifBadgeCount').text(res.data.length).removeClass('d-none');
+
+        res.data.forEach(function(item) {
+        var statusClass = ""; var statusText = ""; var icon = "";
+
+        var pId = item.patientId || item.PatientId || item.id || item.Id;
+        var pName = item.patientName || item.PatientName || item.Name || "مراجِع";
+
+        if (item.daysDiff < 0) {
+        statusClass = "status-overdue"; statusText = `متأخر (${Math.abs(item.daysDiff)} أيام)`;
+        icon = `<span class="badge bg-danger mb-2"><i class="fa-solid fa-triangle-exclamation"></i> ${statusText}</span>`;
+        } else if (item.daysDiff === 0) {
+        statusClass = "status-today"; statusText = "موعد اليوم";
+        icon = `<span class="badge bg-warning text-dark mb-2"><i class="fa-solid fa-clock"></i> ${statusText}</span>`;
+        } else {
+        statusClass = "status-upcoming"; statusText = `بعد ${item.daysDiff} أيام`;
+        icon = `<span class="badge bg-primary mb-2"><i class="fa-solid fa-calendar-day"></i> ${statusText}</span>`;
+        }
+
+        var waMsg = encodeURIComponent(`مرحباً أستاذ ${pName}، معك الخليج للبصريات. نود تذكيرك بأن موعد فحصك الدوري المجاني قد حان بتاريخ ${item.dateStr}. نتشرف بزيارتك! 👓`);
+        var primaryLink = generateWaLink(item.phone, waMsg);
+
+        var phonesHtml = `
+        <div class="d-flex justify-content-between align-items-center bg-light p-2 rounded-3 mb-2 border">
+        <div class="small fw-bold" style="direction:ltr;">${item.phone} <span class="badge bg-secondary ms-1">أساسي</span></div>
+        <a href="${primaryLink}" target="_blank" class="btn btn-sm btn-success rounded-3 px-3 d-flex align-items-center gap-2" style="text-decoration: none;" title="مراسلة الأساسي">
+        <i class="fa-brands fa-whatsapp fs-6"></i> <span>مراسلة</span>
+        </a>
+        </div>
+        `;
+
+        if (item.secondaryPhone) {
+        var secondaryLink = generateWaLink(item.secondaryPhone, waMsg);
+        var note = item.secondaryPhoneOwner ? item.secondaryPhoneOwner : 'احتياطي';
+        phonesHtml += `
+        <div class="d-flex justify-content-between align-items-center bg-light p-2 rounded-3 border-start border-3 border-success mb-2">
+        <div class="small fw-bold" style="direction:ltr;">${item.secondaryPhone} <span class="badge bg-white text-dark border ms-1">${note}</span></div>
+        <a href="${secondaryLink}" target="_blank" class="btn btn-sm rounded-3 px-3 d-flex align-items-center gap-2" style="text-decoration: none; color: #198754; border: 1px solid #198754; background-color: #ffffff;" title="مراسلة (${note})">
+        <i class="fa-brands fa-whatsapp fs-6"></i> <span>مراسلة</span>
+        </a>
+        </div>
+        `;
+        }
+
+        var quickButtonsHtml = `
+        <div class="row g-2 mb-2">
+        <div class="col-6">
+        <button onclick="openQuickPatientDetails(${pId})" class="btn btn-outline-primary btn-sm w-100 rounded-3 fw-bold" style="font-size: 0.8rem;">
+        <i class="fa-solid fa-user-gear me-1"></i> بيانات العميل
+        </button>
+        </div>
+        <div class="col-6">
+        <button onclick="openQuickPatientHistory(${pId}, '${encodeURIComponent(pName)}')" class="btn btn-outline-purple btn-sm w-100 rounded-3 fw-bold" style="font-size: 0.8rem; color: #a855f7; border-color: #a855f7;">
+        <i class="fa-solid fa-file-prescription me-1"></i> وصفات المريض
+        </button>
+        </div>
+        </div>
+        `;
+
+        var cardHtml = `
+        <div class="notif-item ${statusClass}" id="notif-card-${item.id}">
+        ${icon}
+        <h6 class="fw-bold mb-1 text-dark">${pName}</h6>
+        <div class="text-muted small mb-2">
+        <i class="fa-regular fa-calendar me-1"></i> الموعد: <strong class="text-dark">${item.dateStr}</strong>
+        </div>
+
+        ${quickButtonsHtml}
+        ${phonesHtml}
+
+        <div class="notif-actions mt-2">
+        <button onclick="markAsContacted(${item.id})" class="btn-done w-100 d-flex flex-column align-items-center justify-content-center" title="إخفاء التنبيه من القائمة">
+        <span class="fw-bold" style="font-size: 0.95rem;"><i class="fa-solid fa-check text-success me-1"></i> تم التواصل</span>
+        <small style="font-size: 0.7rem; color: #64748b; margin-top: 1px;">(اضغط هنا لإخفاء التنبيه)</small>
+        </button>
+        </div>
+        </div>
+        `;
+        container.append(cardHtml);
+        });
+        })
+        .fail(function() {
+        $('#notificationsContainer').html('<div class="alert alert-danger text-center">فشل تحميل التنبيهات.</div>');
+        });
+        }
+
+        function openQuickPatientDetails(patientId) {
+        $('#quickPatientDetailsBody').html('<div class="text-center py-3"><div class="spinner-border text-primary"></div></div>');
+        $('#quickPatientDetailsModal').modal('show');
+
+        $.get('/PatientsController1/GetPatientById', { id: patientId })
+        .done(function(res) { renderPatientDetails(res); })
+        .fail(function() {
+        $.get('/PatientsController1/GetPatientById/' + patientId)
+        .done(function(res) { renderPatientDetails(res); })
+        .fail(function() { $('#quickPatientDetailsBody').html('<div class="alert alert-danger text-center">تعذر جلب بيانات العميل.</div>'); });
+        });
+        }
+
+        function renderPatientDetails(res) {
+        if(res.success) {
+        var p = res.data;
+        var vipBadge = p.isVIP ? '<span class="badge bg-warning text-dark ms-2"><i class="fa-solid fa-crown"></i> VIP</span>' : '';
+        var html = `
+        <div class="mb-3 border-bottom pb-2">
+        <h5 class="fw-bold text-dark mb-1">${p.firstName} ${p.fatherName || ''} ${p.familyName} ${vipBadge}</h5>
+        </div>
+        <ul class="list-group list-group-flush">
+        <li class="list-group-item d-flex justify-content-between align-items-center py-2"><span class="text-muted fw-bold">الهاتف الأساسي:</span><span class="fw-bold" style="direction:ltr;">${p.phoneNumber}</span></li>
+        <li class="list-group-item d-flex justify-content-between align-items-center py-2"><span class="text-muted fw-bold">الهاتف الاحتياطي:</span><span class="fw-bold" style="direction:ltr;">${p.secondaryPhoneNumber || 'لا يوجد'} (${p.secondaryPhoneOwner || '-'})</span></li>
+        <li class="list-group-item d-flex justify-content-between align-items-center py-2"><span class="text-muted fw-bold">العمر:</span><span class="fw-bold">${p.age ? p.age + ' سنة' : 'غير مسجل'}</span></li>
+        <li class="list-group-item d-flex justify-content-between align-items-center py-2"><span class="text-muted fw-bold">المهنة:</span><span class="fw-bold">${p.job || 'غير مسجل'}</span></li>
+        <li class="list-group-item d-flex justify-content-between align-items-center py-2"><span class="text-muted fw-bold">العنوان:</span><span class="fw-bold">${p.address || 'غير مسجل'}</span></li>
+        </ul>
+        `;
+        $('#quickPatientDetailsBody').html(html);
+        } else {
+        $('#quickPatientDetailsBody').html('<div class="alert alert-danger text-center">تعذر جلب بيانات العميل.</div>');
+        }
+        }
+
+        function openQuickPatientHistory(patientId, encodedName) {
+        $('#quickHistoryPatientName').text(decodeURIComponent(encodedName));
+        $('#quickHistoryLoading').removeClass('d-none');
+        $('#quickHistoryEmpty').addClass('d-none');
+        $('#quickHistoryTimelineContainer').addClass('d-none').empty();
+        $('#quickHistoryModal').modal('show');
+
+        $.get('/PatientsController1/GetPatientHistory', { id: patientId })
+        .done(function (res) {
+        $('#quickHistoryLoading').addClass('d-none');
+        if (!res.success) { Swal.fire('خطأ!', res.message, 'error'); return; }
+        if (!res.hasHistory) { $('#quickHistoryEmpty').removeClass('d-none'); return; }
+
+        var timelineHtml = '';
+        res.data.forEach(function(exam) {
+        var examDate = new Date(exam.examDate).toLocaleDateString('ar-JO', { year: 'numeric', month: 'long', day: 'numeric' });
+        var glassImgHtml = exam.glassImagePath ? `<div class="glass-attachment"><div class="attachment-info"><h6><i class="fa-solid fa-camera text-primary me-1"></i> صورة النظارة المرفقة</h6><p class="small text-muted mb-0">اضغط على الصورة للتكبير</p></div><a href="${exam.glassImagePath}" target="_blank"><img src="${exam.glassImagePath}" title="تكبير الصورة" /></a></div>` : '';
+
+        const valH = (v) => (v === null || v === undefined || v === '') ? '<strong class="val-empty">- فارغ -</strong>' : `<strong>${v}</strong>`;
+        const detH = (v) => (v === null || v === undefined || v === '') ? '<div class="detail-empty">غير مسجل</div>' : `<div>${v}</div>`;
+
+        timelineHtml += `
+        <div class="history-item">
+        <div class="history-dot"><i class="fa-solid fa-stethoscope"></i></div>
+        <div class="history-content">
+        <div class="d-flex justify-content-between align-items-center border-bottom pb-3 mb-3">
+        <div class="history-date m-0"><i class="fa-regular fa-calendar-check me-2"></i> ${examDate}</div>
+        <span class="badge bg-light text-secondary border">زيارة سابقة</span>
+        </div>
+
+        <div class="row g-3">
+        <div class="col-md-6">
+        <div class="eye-record-box od-box">
+        <div class="eye-record-title"><i class="fa-solid fa-eye"></i> العين اليمنى (O.D)</div>
+        <div class="measurements-row">
+        <div class="measure-col"><span>SPH</span>${valH(exam.odSph)}</div>
+        <div class="measure-col"><span>CYL</span>${valH(exam.odCyl)}</div>
+        <div class="measure-col"><span>AXIS</span>${valH(exam.odAxis)}</div>
+        <div class="measure-col"><span>ADD</span>${valH(exam.odAdd)}</div>
+        <div class="measure-col"><span>V.A</span>${valH(exam.odva ?? exam.odVa ?? exam.odVA)}</div>
+        </div>
+        </div>
+        </div>
+        <div class="col-md-6">
+        <div class="eye-record-box os-box">
+        <div class="eye-record-title"><i class="fa-solid fa-eye"></i> العين اليسرى (O.S)</div>
+        <div class="measurements-row">
+        <div class="measure-col"><span>SPH</span>${valH(exam.osSph)}</div>
+        <div class="measure-col"><span>CYL</span>${valH(exam.osCyl)}</div>
+        <div class="measure-col"><span>AXIS</span>${valH(exam.osAxis)}</div>
+        <div class="measure-col"><span>ADD</span>${valH(exam.osAdd)}</div>
+        <div class="measure-col"><span>V.A</span>${valH(exam.osva ?? exam.osVa ?? exam.osVA)}</div>
+        </div>
+        </div>
+        </div>
+        </div>
+        <div class="exam-details-grid">
+        <div class="detail-item"><label><i class="fa-solid fa-user-doctor me-1"></i> أخصائي البصريات</label>${detH(exam.examinerName)}</div>
+        <div class="detail-item"><label><i class="fa-solid fa-ruler-horizontal me-1"></i> (IPD)</label>${detH(exam.ipd)}</div>
+        <div class="detail-item" style="grid-column: 1 / -1;"><label><i class="fa-solid fa-notes-medical me-1"></i> ملاحظات طبية</label>${detH(exam.remarks)}</div>
+        <div class="detail-item" style="grid-column: 1 / -1;"><label><i class="fa-solid fa-glasses me-1"></i> ملاحظات المعرض وتفاصيل المشتريات</label>${detH(exam.purchaseNotes)}</div>
+        </div>
+        ${glassImgHtml}
+        </div>
+        </div>`;
+        });
+        $('#quickHistoryTimelineContainer').html(timelineHtml).removeClass('d-none');
+        }).fail(function() { $('#quickHistoryLoading').addClass('d-none'); Swal.fire('خطأ!', 'لا يمكن الاتصال بالخادم.', 'error'); });
+        }
+
+        // ===============================================
+        // التعديل: سؤال تجديد الموعد لمدة 6 شهور
+        // ===============================================
+        function markAsContacted(examId) {
+        let btn = $(`#notif-card-${examId} .btn-done`);
+        let originalContent = btn.html();
+
+        Swal.fire({
+        title: 'تم التواصل بنجاح 👏',
+        text: 'هل ترغب بجدولة موعد تذكير جديد لهذا العميل بعد 6 أشهر من اليوم؟',
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonColor: '#16a34a',
+        cancelButtonColor: '#64748b',
+        confirmButtonText: 'نعم، ذكّرني بعد 6 أشهر ⏱️',
+        cancelButtonText: 'لا، فقط أخفِ التنبيه ✖️'
+        }).then((result) => {
+        if (result.isDismissed && result.dismiss !== Swal.DismissReason.cancel) {
+        return; // تم الإغلاق بدون اختيار
+        }
+
+        let renew = result.isConfirmed; // true لو نعم، false لو لا
+        btn.html('<i class="fa-solid fa-spinner fa-spin fs-5"></i>').prop('disabled', true);
+
+        $.post('/ExaminationsController1/MarkAsContacted', { id: examId, renewForSixMonths: renew })
+        .done(function (res) {
+        if (res.success) {
+        $(`#notif-card-${examId}`).slideUp(300, function() {
+        $(this).remove();
+        let currentCount = parseInt($('#notifBadgeCount').text());
+        if(currentCount > 1) {
+        $('#notifBadgeCount').text(currentCount - 1);
+        } else {
+        $('#notifBadgeCount').addClass('d-none');
+        $('#notificationsContainer').html(`<div class="text-center text-muted mt-5 pt-4"><i class="fa-solid fa-mug-hot" style="font-size: 3rem; color: #cbd5e1; margin-bottom: 15px;"></i><h6 class="fw-bold text-dark">لا يوجد مواعيد معلقة!</h6><p class="small">كل الزبائن تمت متابعتهم، استمتع بقهوتك.</p></div>`);
+        }
+
+        let toastMsg = renew ? 'تم إخفاء التنبيه وجدولة موعد بعد 6 أشهر' : 'تم إخفاء التنبيه بنجاح';
+        Swal.fire({ toast: true, position: 'bottom-end', icon: 'success', title: toastMsg, showConfirmButton: true, confirmButtonText: 'تراجع ↩️', confirmButtonColor: '#64748b', timer: 10000, timerProgressBar: true }).then((toastResult) => {
+        if (toastResult.isConfirmed) {
+        $.post('/ExaminationsController1/UndoContacted', { id: examId }).done(function (undoRes) {
+        if(undoRes.success) { loadSmartNotifications(); }
+        });
+        }
+        });
+        });
+        }
+        })
+        .fail(function() {
+        btn.html(originalContent).prop('disabled', false);
+        Swal.fire({ toast: true, position: 'top-end', icon: 'error', title: 'فشل في الاتصال بالسيرفر', showConfirmButton: false, timer: 2000 });
+        });
+        });
+        }
+    </script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

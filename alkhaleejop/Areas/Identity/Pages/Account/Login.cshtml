@@ -1,0 +1,230 @@
+@page
+@model LoginModel
+
+@{
+    ViewData["Title"] = "تسجيل الدخول - الخليج للبصريات";
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    
+   
+    <meta name="theme-color" content="#7a1c4b" />
+
+    <meta property="og:title" content="تسجيل الدخول - نظام الخليج للبصريات" />
+    <meta property="og:description" content="قم بتسجيل الدخول للوصول إلى نظام إدارة سجلات عملاء الخليج للبصريات." />
+    <meta property="og:image" content="~/imges/logo.png" />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="ar_AR" />
+
+    <link rel="icon" type="image/png" href="~/imges/logo.png" />
+    <link rel="shortcut icon" type="image/png" href="~/imges/logo.png" />
+    <link rel="apple-touch-icon" href="~/imges/logo.png" />
+
+
+    <title>@ViewData["Title"]</title>
+
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+            :root {
+                --primary-color: #7a1c4b; 
+                --primary-dark: #420b26;
+                --bg-gradient: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-color) 100%);
+            }
+
+            body {
+                font-family: 'Cairo', sans-serif;
+                background: var(--bg-gradient);
+                min-height: 100vh;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin: 0;
+                padding: 20px; 
+            }
+
+            .login-wrapper {
+                width: 100%;
+                max-width: 480px; 
+            }
+
+            .login-card {
+                background: rgba(255, 255, 255, 0.98);
+                border-radius: 24px;
+                box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+                padding: 2.5rem 2rem;
+                backdrop-filter: blur(10px);
+                transition: all 0.3s ease;
+            }
+
+            .logo-container {
+                text-align: center;
+                margin-bottom: 1.5rem;
+            }
+
+            .logo-container img {
+                max-width: 140px;
+                height: auto;
+                border-radius: 12px;
+                transition: transform 0.3s ease;
+            }
+
+            .logo-container img:hover {
+                transform: scale(1.05);
+            }
+
+            .system-title {
+                color: var(--primary-color);
+                font-weight: 800;
+                text-align: center;
+                margin-bottom: 2rem;
+                font-size: 1.6rem;
+                letter-spacing: -0.5px;
+            }
+
+            .form-floating > label {
+                right: 0;
+                left: auto;
+                padding-right: 1.25rem;
+                color: #6c757d;
+                font-weight: 600;
+            }
+
+            .form-control {
+                border-radius: 14px;
+                border: 2px solid #e9ecef;
+                padding: 1rem 0.75rem;
+                height: calc(3.5rem + 5px);
+                font-weight: 600;
+                transition: all 0.3s ease;
+            }
+
+            .form-control:focus {
+                border-color: var(--primary-color);
+                box-shadow: 0 0 0 0.25rem rgba(122, 28, 75, 0.15);
+            }
+
+            .form-floating > .form-control:focus ~ label,
+            .form-floating > .form-control:not(:placeholder-shown) ~ label {
+                transform: scale(0.85) translateY(-0.75rem) translateX(1rem);
+                color: var(--primary-color);
+            }
+
+            .btn-primary-custom {
+                background-color: var(--primary-color);
+                border: none;
+                font-weight: 700;
+                font-size: 1.2rem;
+                border-radius: 14px;
+                padding: 14px;
+                color: white;
+                transition: all 0.3s ease;
+                box-shadow: 0 8px 20px rgba(122, 28, 75, 0.3);
+            }
+
+            .btn-primary-custom:hover {
+                background-color: var(--primary-dark);
+                transform: translateY(-3px);
+                box-shadow: 0 12px 25px rgba(122, 28, 75, 0.4);
+                color: white;
+            }
+
+            .form-check-input {
+                width: 1.2em;
+                height: 1.2em;
+                margin-top: 0.2em;
+                cursor: pointer;
+            }
+
+            .form-check-input:checked {
+                background-color: var(--primary-color);
+                border-color: var(--primary-color);
+            }
+
+            .form-check-label {
+                cursor: pointer;
+                padding-right: 1.8rem;
+                font-weight: 600;
+                color: #495057;
+            }
+
+            @@media (min-width: 768px) and (max-width: 1024px) {
+                .login-card {
+                    padding: 3rem 2.5rem;
+                }
+                .system-title {
+                    font-size: 1.8rem;
+                }
+                .form-control {
+                    font-size: 1.1rem;
+                }
+            }
+            .form-check-input {
+                width: 1.3em;
+                height: 1.3em;
+                cursor: pointer;
+            }
+
+                .form-check-input:checked {
+                    background-color: var(--primary-color);
+                    border-color: var(--primary-color);
+                    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3e%3cpath fill='none' stroke='%23fff' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='M6 10l3 3l6-6'/%3e%3c/svg%3e");
+                }
+
+            .form-check-label {
+                cursor: pointer;
+                font-weight: 600;
+                color: #495057;
+                margin-right: 2rem; 
+                display: block;
+            }
+    </style>
+</head>
+<body>
+
+    <div class="login-wrapper">
+        <div class="login-card">
+            <div class="logo-container">
+                <img src="~/imges/logo.png" alt="الخليج للبصريات" />
+            </div>
+
+            <h1 class="system-title">نظام إدارة العملاء</h1>
+
+            <form id="account" method="post">
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger rounded-3 mb-3" role="alert"></div>
+
+                <div class="form-floating mb-4">
+                    <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="البريد الإلكتروني" />
+                    <label asp-for="Input.Email">البريد الإلكتروني</label>
+                    <span asp-validation-for="Input.Email" class="text-danger small fw-bold"></span>
+                </div>
+
+                <div class="form-floating mb-4">
+                    <input asp-for="Input.Password" class="form-control" autocomplete="current-password" aria-required="true" placeholder="كلمة المرور" />
+                    <label asp-for="Input.Password">كلمة المرور</label>
+                    <span asp-validation-for="Input.Password" class="text-danger small fw-bold"></span>
+                </div>
+                <div class="mb-4">
+                    <div class="form-check" style="padding-right: 0;">
+                        <input class="form-check-input" asp-for="Input.RememberMe" id="rememberMe" style="float: right; margin-left: 0.8rem;" />
+                        <label class="form-check-label" for="rememberMe">
+                            البقاء متصلاً (تذكرني)
+                        </label>
+                    </div>
+                </div>
+
+                <button id="login-submit" type="submit" class="w-100 btn btn-primary-custom">تسجيل الدخول</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <partial name="_ValidationScriptsPartial" />
+</body>
+</html>

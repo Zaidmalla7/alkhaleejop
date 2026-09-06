@@ -1,0 +1,1095 @@
+﻿@{
+    ViewData["Title"] = "إدارة العملاء";
+}
+
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" />
+<link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.bootstrap5.min.css" />
+<link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.bootstrap5.min.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+
+<style>
+    .page-header-action {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+        flex-wrap: wrap;
+        gap: 15px;
+    }
+
+    .card-custom {
+        background: #ffffff;
+        border: none;
+        border-radius: 16px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.03);
+        padding: 2rem;
+    }
+
+    #patientsTable {
+        border-collapse: separate;
+        border-spacing: 0;
+        width: 100% !important;
+    }
+
+        #patientsTable thead th {
+            background-color: #f8f9fc;
+            color: #6c757d;
+            font-weight: 700;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 1rem;
+            border-bottom: 2px solid #eaedf2;
+            border-top: none;
+            white-space: nowrap;
+        }
+
+        #patientsTable tbody td {
+            padding: 1.2rem 1rem;
+            vertical-align: middle;
+            border-bottom: 1px solid #f0f2f5;
+            color: #495057;
+            font-size: 0.95rem;
+        }
+
+        #patientsTable tbody tr:hover td {
+            background-color: #fdfdfd;
+        }
+
+    .patient-name-wrapper {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .p-reg-date {
+        font-size: 0.75rem;
+        color: #64748b;
+        margin-top: 4px;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+    }
+
+    .vip-badge {
+        background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+        color: white;
+        font-size: 0.7rem;
+        padding: 3px 6px;
+        border-radius: 6px;
+        margin-right: 6px;
+        font-weight: bold;
+        box-shadow: 0 2px 4px rgba(245, 158, 11, 0.3);
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        vertical-align: middle;
+    }
+
+    .actions-wrapper {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+
+    .btn-action {
+        width: 38px;
+        height: 38px;
+        border-radius: 10px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s ease;
+        border: none;
+        font-size: 1rem;
+        flex-shrink: 0;
+    }
+
+        .btn-action:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+    .btn-edit {
+        background-color: #f0f4ff;
+        color: #3b82f6;
+    }
+
+        .btn-edit:hover {
+            background-color: #3b82f6;
+            color: #fff;
+        }
+
+    .btn-delete {
+        background-color: #fee2e2;
+        color: #ef4444;
+    }
+
+        .btn-delete:hover {
+            background-color: #ef4444;
+            color: #fff;
+        }
+
+    .btn-history {
+        background-color: #f3e8ff;
+        color: #a855f7;
+    }
+
+        .btn-history:hover {
+            background-color: #a855f7;
+            color: #fff;
+        }
+
+    .top-controls-wrapper {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.5rem;
+        flex-wrap: wrap;
+        gap: 15px;
+    }
+
+    div.dataTables_wrapper div.dataTables_length {
+        margin: 0;
+    }
+
+        div.dataTables_wrapper div.dataTables_length label {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: #6c757d;
+            font-weight: 600;
+            margin-bottom: 0;
+        }
+
+        div.dataTables_wrapper div.dataTables_length select {
+            border-radius: 8px;
+            border: 1px solid #eaedf2;
+            padding: 0.4rem 1.8rem 0.4rem 0.8rem;
+            outline: none;
+            color: #495057;
+            box-shadow: none;
+        }
+
+            div.dataTables_wrapper div.dataTables_length select:focus {
+                border-color: var(--brand-color);
+            }
+
+    div.dataTables_wrapper div.dataTables_filter {
+        margin: 0;
+    }
+
+        div.dataTables_wrapper div.dataTables_filter input {
+            border-radius: 10px;
+            border: 2px solid #eaedf2;
+            padding: 0.6rem 1.2rem;
+            outline: none;
+            box-shadow: none;
+            transition: border-color 0.3s ease;
+            width: 250px;
+            margin-right: 10px;
+        }
+
+            div.dataTables_wrapper div.dataTables_filter input:focus {
+                border-color: var(--brand-color);
+            }
+
+    div.dt-buttons {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+
+        div.dt-buttons .btn {
+            background-color: #ffffff !important;
+            border: 1px solid #eaedf2 !important;
+            color: #495057 !important;
+            border-radius: 10px !important;
+            font-weight: 600 !important;
+            padding: 0.5rem 1.2rem !important;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.02) !important;
+            transition: all 0.2s ease !important;
+        }
+
+            div.dt-buttons .btn:hover {
+                background-color: #f8f9fc !important;
+                border-color: #d1d5db !important;
+                transform: translateY(-2px);
+            }
+
+    .modern-input {
+        background-color: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 10px;
+        padding: 0.7rem 1rem;
+        transition: all 0.3s;
+        color: #1e293b;
+        font-weight: 600;
+        width: 100%;
+    }
+
+        .modern-input:focus {
+            background-color: #ffffff;
+            border-color: var(--brand-color);
+            box-shadow: 0 0 0 3px rgba(122, 28, 75, 0.1);
+        }
+
+    .modern-label {
+        font-weight: 700;
+        color: #334155;
+        font-size: 0.95rem;
+        margin-bottom: 0.6rem;
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        gap: 8px;
+        text-align: right;
+    }
+
+        .modern-label i {
+            color: #64748b;
+        }
+
+    .invalid-feedback {
+        font-size: 0.85rem;
+        font-weight: 600;
+        margin-top: 6px;
+        padding-right: 5px;
+        color: #ef4444;
+    }
+
+    .was-validated .form-control:invalid {
+        border-color: #ef4444;
+        background-image: none;
+        box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+    }
+
+    .vip-checkbox-wrapper {
+        background: #fffbeb;
+        border: 1px solid #fde68a;
+        border-radius: 10px;
+        padding: 1rem;
+        transition: all 0.3s;
+        cursor: pointer;
+    }
+
+        .vip-checkbox-wrapper:hover {
+            background: #fef3c7;
+            border-color: #fcd34d;
+        }
+
+        .vip-checkbox-wrapper .form-check-input {
+            width: 1.5rem;
+            height: 1.5rem;
+            margin: 0;
+            cursor: pointer;
+            border-color: #fcd34d;
+            float: none;
+        }
+
+            .vip-checkbox-wrapper .form-check-input:checked {
+                background-color: #f59e0b;
+                border-color: #f59e0b;
+            }
+
+        .vip-checkbox-wrapper .form-check-label {
+            cursor: pointer;
+            font-weight: 700;
+            color: #d97706;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+        }
+
+    .history-timeline {
+        position: relative;
+        padding: 20px 0;
+    }
+
+        .history-timeline::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 28px;
+            width: 3px;
+            height: 100%;
+            background: linear-gradient(180deg, #a855f7 0%, #e2e8f0 15%, #e2e8f0 100%);
+            border-radius: 5px;
+        }
+
+    .history-item {
+        position: relative;
+        margin-bottom: 2rem;
+        padding-right: 70px;
+    }
+
+    .history-dot {
+        position: absolute;
+        top: 0;
+        right: 12px;
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background-color: #a855f7;
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 0 0 6px #fcfcfd, 0 4px 6px rgba(0,0,0,0.1);
+        z-index: 2;
+        font-size: 14px;
+    }
+
+    .history-content {
+        background: #fff;
+        border: 1px solid #eaedf2;
+        border-radius: 16px;
+        padding: 1.5rem;
+        box-shadow: 0 10px 25px -5px rgba(0,0,0,0.02);
+        transition: transform 0.2s;
+    }
+
+        .history-content:hover {
+            transform: translateY(-2px);
+            border-color: #cbd5e1;
+            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05);
+        }
+
+    .history-date {
+        font-weight: 800;
+        color: #1e293b;
+        font-size: 1.15rem;
+        margin: 0;
+    }
+
+        .history-date i {
+            color: #a855f7;
+        }
+
+    .eye-record-box {
+        border: 1px solid #eaedf2;
+        border-radius: 12px;
+        padding: 1rem;
+        background: #fdfdfe;
+        height: 100%;
+    }
+
+    .od-box {
+        border-top: 3px solid #dc2626;
+    }
+
+    .os-box {
+        border-top: 3px solid #2563eb;
+    }
+
+    .eye-record-title {
+        font-weight: 800;
+        font-size: 0.9rem;
+        margin-bottom: 15px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .od-box .eye-record-title {
+        color: #dc2626;
+    }
+
+    .os-box .eye-record-title {
+        color: #2563eb;
+    }
+
+    .measurements-row {
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 5px;
+        direction: ltr; 
+    }
+
+    .measure-col {
+        flex: 1;
+        text-align: center;
+        min-width: 45px;
+    }
+
+        .measure-col span {
+            display: block;
+            color: #64748b;
+            font-size: 0.75rem;
+            font-weight: 700;
+            margin-bottom: 3px;
+        }
+
+        .measure-col strong {
+            font-size: 0.95rem;
+            color: #1e293b;
+            direction: ltr;
+            display: inline-block;
+            background: #f8fafc;
+            padding: 4px 8px;
+            border-radius: 6px;
+            border: 1px solid #eaedf2;
+            width: 100%;
+        }
+
+    .val-empty {
+        color: #94a3b8 !important;
+        font-style: italic;
+        font-weight: normal !important;
+        background: transparent !important;
+        border: 1px dashed #cbd5e1 !important;
+    }
+
+    .exam-details-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 15px;
+        margin-top: 1rem;
+        padding-top: 1rem;
+        border-top: 1px dashed #eaedf2;
+    }
+
+    .detail-item label {
+        display: block;
+        font-size: 0.8rem;
+        color: #64748b;
+        font-weight: 700;
+        margin-bottom: 4px;
+    }
+
+    .detail-item div {
+        font-size: 0.95rem;
+        color: #334155;
+        font-weight: 600;
+        background: #f8fafc;
+        padding: 8px 12px;
+        border-radius: 8px;
+        border: 1px solid #eaedf2;
+        white-space: pre-line;
+    }
+
+    .detail-empty {
+        color: #94a3b8 !important;
+        font-style: italic;
+        font-weight: normal !important;
+    }
+
+    .glass-attachment {
+        background: #f8fafc;
+        border: 1px dashed #cbd5e1;
+        border-radius: 12px;
+        padding: 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-top: 1.2rem;
+    }
+
+        .glass-attachment img {
+            width: 70px;
+            height: 70px;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 1px solid #eaedf2;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+            .glass-attachment img:hover {
+                transform: scale(1.05);
+            }
+
+    .attachment-info h6 {
+        margin: 0 0 5px 0;
+        font-weight: 700;
+        color: #334155;
+    }
+
+    .attachment-info p {
+        margin: 0;
+        font-size: 0.85rem;
+        color: #64748b;
+    }
+
+    @@media (max-width: 991px) {
+        .top-controls-wrapper {
+            flex-direction: column;
+            align-items: stretch;
+            gap: 15px;
+        }
+
+        .left-controls {
+            flex-direction: column;
+            align-items: stretch !important;
+            gap: 10px !important;
+            width: 100%;
+        }
+
+        div.dt-buttons {
+            justify-content: center;
+            width: 100%;
+        }
+
+            div.dt-buttons .btn {
+                flex: 1;
+                justify-content: center;
+                padding: 0.6rem;
+                font-size: 0.9rem;
+            }
+
+        div.dataTables_wrapper div.dataTables_filter {
+            text-align: right;
+            width: 100%;
+        }
+
+            div.dataTables_wrapper div.dataTables_filter input {
+                width: 100%;
+                margin: 0;
+                margin-top: 10px;
+            }
+
+        div.dataTables_wrapper div.dataTables_length label {
+            justify-content: space-between;
+            width: 100%;
+        }
+    }
+
+    @@media (max-width: 576px) {
+        .page-header-action {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+            .page-header-action button {
+                width: 100%;
+                justify-content: center;
+            }
+
+        .card-custom {
+            padding: 1rem;
+        }
+
+        .history-timeline::before {
+            right: 20px;
+        }
+
+        .history-item {
+            padding-right: 50px;
+        }
+
+        .history-dot {
+            right: 4px;
+            width: 32px;
+            height: 32px;
+        }
+
+        .measure-col {
+            min-width: 30%;
+            margin-bottom: 10px;
+        }
+    }
+</style>
+
+<div class="page-header-action">
+    <div>
+        <h3 class="fw-bold mb-1" style="color: var(--text-main);">سجل العملاء</h3>
+        <span class="text-muted" style="font-size: 0.9rem;">إدارة بيانات المرضى والبحث عنهم بسرعة</span>
+    </div>
+    <button class="btn btn-primary px-4 py-2.5 rounded-3 fw-bold shadow-sm" style="background-color: var(--brand-color); border-color: var(--brand-color);" onclick="openPatientModal()">
+        <i class="fa-solid fa-plus me-2"></i> إضافة عميل جديد
+    </button>
+</div>
+
+<div class="card-custom">
+    <table id="patientsTable" class="table dt-responsive nowrap w-100">
+        <thead>
+            <tr>
+                <th>العميل وتاريخ الزيارة</th>
+                <th>أرقام الهواتف</th>
+                <th>العمر</th>
+                <th>المهنة</th>
+                <th>العنوان</th>
+                <th class="text-center">الإجراءات</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>
+<div class="modal fade" id="patientModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content border-0 shadow-lg rounded-4">
+            <div class="modal-header border-bottom-0 pb-0 mt-3">
+                <h5 class="modal-title fw-bold px-3" id="modalTitle" style="color: var(--brand-color);">إضافة عميل جديد</h5>
+                <button type="button" class="btn-close me-3" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4">
+                <form id="patientForm" class="needs-validation" novalidate>
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" id="patientId" name="Id" value="0" />
+
+                    <div class="row g-4 mb-4">
+                        <div class="col-lg-3 col-md-6 col-sm-12">
+                            <label for="FirstName" class="modern-label"><i class="fa-solid fa-user"></i> <span>الاسم الأول</span> <span class="text-danger ms-auto">*</span></label>
+                            <input type="text" class="form-control modern-input" id="FirstName" name="FirstName" placeholder="الاسم الأول" required tabindex="1">
+                            <div class="invalid-feedback">مطلوب.</div>
+                        </div>
+                        <div class="col-lg-3 col-md-6 col-sm-12">
+                            <label for="FatherName" class="modern-label"><i class="fa-solid fa-user-tie"></i> <span>اسم الأب</span></label>
+                            <input type="text" class="form-control modern-input" id="FatherName" name="FatherName" placeholder="اختياري" tabindex="2">
+                        </div>
+                        <div class="col-lg-3 col-md-6 col-sm-12">
+                            <label for="FamilyName" class="modern-label"><i class="fa-solid fa-users"></i> <span>العائلة</span> <span class="text-danger ms-auto">*</span></label>
+                            <input type="text" class="form-control modern-input" id="FamilyName" name="FamilyName" placeholder="العائلة" required tabindex="3">
+                            <div class="invalid-feedback">مطلوب.</div>
+                        </div>
+                        <div class="col-lg-3 col-md-6 col-sm-12">
+                            <label for="RegistrationDate" class="modern-label"><i class="fa-regular fa-calendar-check"></i> <span>تاريخ الزيارة</span> <span class="text-muted fw-normal small ms-auto">(اختياري)</span></label>
+                            <input type="date" class="form-control modern-input text-primary fw-bold" id="RegistrationDate" name="RegistrationDate" tabindex="4">
+                        </div>
+                    </div>
+
+                    <div class="row g-4 mb-4 mt-1 bg-light p-3 rounded-4 mx-0 border">
+                        <div class="col-md-12">
+                            <label for="PhoneNumber" class="modern-label"><i class="fa-solid fa-phone"></i> <span>رقم الهاتف الأساسي</span> <span class="text-danger ms-auto">*</span></label>
+                            <input type="tel" inputmode="numeric" class="form-control modern-input fw-bold border-primary" id="PhoneNumber" name="PhoneNumber" placeholder="07XXXXXXXX" required minlength="9" maxlength="15" oninput="this.value = this.value.replace(/[^0-9]/g, '')" style="direction: ltr; text-align: left; font-size: 1.1rem;" tabindex="5">
+                            <div class="invalid-feedback">يرجى إدخال رقم هاتف صحيح.</div>
+                        </div>
+                        <div class="col-md-6 col-sm-12">
+                            <label for="SecondaryPhoneNumber" class="modern-label"><i class="fa-solid fa-phone-flip"></i> <span>رقم هاتف احتياطي</span> <span class="text-muted fw-normal small ms-auto">(اختياري)</span></label>
+                            <input type="tel" inputmode="numeric" class="form-control modern-input" id="SecondaryPhoneNumber" name="SecondaryPhoneNumber" placeholder="07XXXXXXXX" minlength="9" maxlength="15" oninput="this.value = this.value.replace(/[^0-9]/g, '')" style="direction: ltr; text-align: left;" tabindex="6">
+                        </div>
+                        <div class="col-md-6 col-sm-12">
+                            <label for="SecondaryPhoneOwner" class="modern-label"><i class="fa-solid fa-circle-info"></i> <span>لمن هذا الرقم؟</span> <span class="text-muted fw-normal small ms-auto">(اختياري)</span></label>
+                            <input type="text" class="form-control modern-input" id="SecondaryPhoneOwner" name="SecondaryPhoneOwner" placeholder="مثال: ابنه، زوجته..." tabindex="7">
+                        </div>
+                    </div>
+
+                    <div class="row g-4 mb-2">
+                        <div class="col-md-3 col-sm-6">
+                            <label for="Age" class="modern-label"><i class="fa-solid fa-cake-candles"></i> <span>العمر</span></label>
+                            <input type="number" inputmode="numeric" class="form-control modern-input" id="Age" name="Age" placeholder="مثال: 35" tabindex="8">
+                        </div>
+                        <div class="col-md-4 col-sm-6">
+                            <label for="Job" class="modern-label"><i class="fa-solid fa-briefcase"></i> <span>المهنة</span></label>
+                            <input type="text" class="form-control modern-input" id="Job" name="Job" placeholder="أدخل المهنة..." tabindex="9">
+                        </div>
+                        <div class="col-md-5 col-sm-12">
+                            <label for="Address" class="modern-label"><i class="fa-solid fa-location-dot"></i> <span>العنوان / المنطقة</span></label>
+                            <input type="text" class="form-control modern-input" id="Address" name="Address" placeholder="أدخل مكان السكن..." tabindex="10">
+                        </div>
+                    </div>
+
+                    <div class="row mt-4">
+                        <div class="col-12">
+                            <div class="vip-checkbox-wrapper" onclick="toggleCheckbox('IsVIP')">
+                                <div class="form-check m-0 p-0 d-flex align-items-center w-100">
+                                    <input class="form-check-input ms-2 me-0" type="checkbox" id="IsVIP" name="IsVIP" value="true" tabindex="11">
+                                    <input type="hidden" name="IsVIP" value="false" />
+                                    <label class="form-check-label d-flex align-items-center gap-2 flex-grow-1" for="IsVIP">
+                                        <i class="fa-solid fa-crown fs-5"></i> <span>تمييز كعميل خاص (VIP)</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer border-top-0 pt-0 px-4 pb-4">
+                <button type="button" class="btn btn-light rounded-3 px-4 py-2 fw-bold" data-bs-dismiss="modal">إلغاء</button>
+                <button type="button" class="btn btn-primary rounded-3 px-5 py-2 fw-bold shadow-sm" style="background-color: var(--brand-color); border-color: var(--brand-color);" onclick="savePatient()" tabindex="12">حفظ البيانات</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="historyModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl modal-dialog-scrollable">
+        <div class="modal-content border-0 shadow-lg rounded-4">
+            <div class="modal-header bg-light border-bottom-0 pb-3 mt-1 rounded-top-4">
+                <h5 class="modal-title fw-bold" style="color: #a855f7;">
+                    <i class="fa-solid fa-book-medical me-2"></i> السجل الطبي للعميل: <span id="historyPatientName" class="text-dark"></span>
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4 bg-light" style="background-color: #fcfcfd !important;">
+                <div id="historyLoading" class="text-center py-5 d-none">
+                    <div class="spinner-border" style="color: #a855f7;" role="status"></div>
+                    <p class="mt-2 text-muted fw-bold">جاري جلب السجل الطبي...</p>
+                </div>
+
+                <div id="historyEmpty" class="text-center py-5 d-none">
+                    <i class="fa-regular fa-folder-open text-muted mb-3" style="font-size: 4rem; opacity: 0.5;"></i>
+                    <h5 class="text-muted fw-bold">لا يوجد سجل فحوصات أو مشتريات حتى الآن.</h5>
+                </div>
+
+                <div id="historyTimelineContainer" class="history-timeline d-none">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="imagePreviewModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg rounded-4 bg-transparent">
+            <div class="modal-header border-bottom-0 p-3 position-absolute w-100" style="z-index: 10;">
+                <button type="button" class="btn-close btn-close-white bg-dark rounded-circle p-2" data-bs-dismiss="modal" aria-label="Close" style="opacity: 0.8;"></button>
+            </div>
+            <div class="modal-body p-0 text-center">
+                <img id="enlargedImageDisplay" src="" class="img-fluid rounded-4 shadow" style="max-height: 80vh; object-fit: contain; background: #fff;" />
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.5.0/js/responsive.bootstrap5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.bootstrap5.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.print.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+        var dataTable;
+
+        function toggleCheckbox(id) {
+        var cb = document.getElementById(id);
+        if(event.target.tagName !== 'INPUT' && event.target.tagName !== 'LABEL' && event.target.tagName !== 'I' && event.target.tagName !== 'SPAN') {
+        cb.checked = !cb.checked;
+        }
+        }
+
+        $(document).ready(function () {
+
+        $('#patientForm').on('keydown', 'input, select', function(e) {
+        if (e.key === 'Enter') {
+        e.preventDefault();
+        var inputs = $('#patientForm').find('input:not([type="hidden"]), select');
+        var index = inputs.index(this);
+        if (index > -1 && index < inputs.length - 1) {
+        inputs.eq(index + 1).focus();
+        }
+        else if (index === inputs.length - 1) {
+        savePatient();
+        }
+        }
+        });
+
+        dataTable = $('#patientsTable').DataTable({
+        ajax: { url: '/PatientsController1/GetPatientsData', type: 'GET', datatype: 'json' },
+        dom: '<"top-controls-wrapper"<"left-controls d-flex align-items-center gap-4"lB>f>rt<"row align-items-center mt-3"<"col-md-6"i><"col-md-6"p>>',
+        buttons: [
+        { extend: 'excelHtml5', text: '<i class="fa-solid fa-file-excel text-success"></i> إكسيل', className: 'btn', exportOptions: { columns: [0, 1, 2, 3, 4], orthogonal: 'export' } },
+        { extend: 'print', text: '<i class="fa-solid fa-print text-secondary"></i> طباعة القائمة', className: 'btn', exportOptions: { columns: [0, 1, 2, 3, 4], orthogonal: 'export' }, customize: function (win) { $(win.document.body).css('direction', 'rtl').css('text-align', 'right'); $(win.document.body).find('table').addClass('table-bordered').css('font-size', '14pt'); } }
+        ],
+        columns: [
+        {
+        data: null, responsivePriority: 1,
+        render: function (data, type, row) {
+        let plainFather = row.fatherName ? ' ' + row.fatherName + ' ' : ' ';
+        let fullName = row.firstName + plainFather + row.familyName;
+
+        var regDate = row.registrationDate ? new Date(row.registrationDate).toLocaleDateString('ar-JO') : '';
+        var dateBadge = regDate ? `<div class="p-reg-date"><i class="fa-regular fa-calendar-check"></i> ${regDate}</div>` : '';
+
+        if (type === 'display') {
+        var vipBadge = row.isVIP ? `<span class="vip-badge"><i class="fa-solid fa-crown"></i> VIP</span>` : '';
+
+        return `
+        <div class="patient-name-wrapper">
+        <div class="d-flex align-items-center">
+        ${vipBadge}
+        <span class="fw-bold" style="color: var(--text-main); font-size: 1.05rem;">${fullName}</span>
+        </div>
+        ${dateBadge}
+        </div>`;
+        }
+
+        return row.isVIP ? `(VIP) ${fullName}` : fullName;
+        }
+        },
+        {
+        data: 'phoneNumber', responsivePriority: 3,
+        render: function(data, type, row) {
+        if (type === 'display') {
+        let primaryPhone = `<div class="fw-bold text-dark" style="direction:ltr; text-align: right;">${data}</div>`;
+        let secondaryPhone = '';
+        if(row.secondaryPhoneNumber) {
+        let noteBadge = row.secondaryPhoneOwner ? `<span class="badge bg-light text-secondary border ms-2 px-2 py-1">${row.secondaryPhoneOwner}</span>` : '';
+        secondaryPhone = `<div class="mt-1 d-flex align-items-center justify-content-end flex-wrap gap-1" style="font-size: 0.85rem;">${noteBadge}<span class="text-muted" style="direction:ltr;"><i class="fa-solid fa-phone-arrow-up-right fa-xs me-1"></i>${row.secondaryPhoneNumber}</span></div>`;
+        }
+        return primaryPhone + secondaryPhone;
+        }
+        let plainText = data ? data + " " : "";
+        if(row.secondaryPhoneNumber) {
+        let plainNote = row.secondaryPhoneOwner ? ` (${row.secondaryPhoneOwner})` : '';
+        plainText += ` | احتياطي: ${row.secondaryPhoneNumber}${plainNote}`;
+        }
+        return plainText;
+        }
+        },
+        { data: 'age', responsivePriority: 4, render: function(data, type, row) { if (type === 'display') return data ? `<span class="badge bg-light text-dark border px-2 py-1">${data} سنة</span>` : '<span class="text-muted">-</span>'; return data ? `${data} سنة` : 'لا يوجد'; } },
+        { data: 'job', responsivePriority: 6, render: function(data, type, row) { let isEmpty = (!data || data.toString().trim().toUpperCase() === 'NONE'); if (type === 'display') return isEmpty ? '<span class="text-muted">لا يوجد</span>' : data; return isEmpty ? 'لا يوجد' : data; } },
+        { data: 'address', responsivePriority: 5, render: function(data, type, row) { let isEmpty = (!data || data.toString().trim() === ''); if (type === 'display') return isEmpty ? '<span class="text-muted">لا يوجد</span>' : data; return isEmpty ? 'لا يوجد' : data; } },
+        {
+        data: 'id', orderable: false, responsivePriority: 2,
+        render: function (data, type, row) {
+        let plainFather = row.fatherName ? ' ' + row.fatherName + ' ' : ' ';
+        let plainName = row.firstName + plainFather + row.familyName;
+        var safeName = encodeURIComponent(plainName);
+        return `
+        <div class="actions-wrapper">
+        <button class="btn-action btn-history" onclick="viewHistory(${data}, '${safeName}')" title="السجل الطبي (الوصفات والنظارات)">
+        <i class="fa-solid fa-clock-rotate-left"></i>
+        </button>
+        <button class="btn-action btn-edit" onclick="editPatient(${data})" title="تعديل ملف العميل">
+        <i class="fa-solid fa-pen"></i>
+        </button>
+        <button class="btn-action btn-delete" onclick="deletePatient(${data})" title="حذف العميل">
+        <i class="fa-solid fa-trash"></i>
+        </button>
+        </div>
+        `;
+        }
+        }
+        ],
+        language: { url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/ar.json' }, ordering: false, responsive: true
+        });
+        });
+
+        function getValHtml(val) {
+        if (val === null || val === undefined || val === '' || val.toString().trim() === '') {
+        return `<strong class="val-empty">- فارغ -</strong>`;
+        }
+        return `<strong>${val}</strong>`;
+        }
+
+        function getDetailHtml(val) {
+        if (val === null || val === undefined || val.toString().trim() === '') {
+        return `<div class="detail-empty">غير مسجل</div>`;
+        }
+        return `<div>${val}</div>`;
+        }
+
+        function viewHistory(patientId, encodedName) {
+        $('#historyPatientName').text(decodeURIComponent(encodedName));
+        $('#historyLoading').removeClass('d-none');
+        $('#historyEmpty').addClass('d-none');
+        $('#historyTimelineContainer').addClass('d-none').empty();
+        $('#historyModal').modal('show');
+
+        $.get('/PatientsController1/GetPatientHistory', { id: patientId })
+        .done(function (res) {
+        $('#historyLoading').addClass('d-none');
+
+        if (!res.success) {
+        Swal.fire('خطأ!', res.message, 'error');
+        $('#historyModal').modal('hide');
+        return;
+        }
+
+        if (!res.hasHistory) {
+        $('#historyEmpty').removeClass('d-none');
+        return;
+        }
+
+        var timelineHtml = '';
+        res.data.forEach(function(exam) {
+        var examDate = new Date(exam.examDate).toLocaleDateString('ar-JO', { year: 'numeric', month: 'long', day: 'numeric' });
+
+        var glassImgHtml = '';
+        if (exam.glassImagePath) {
+        glassImgHtml = `
+        <div class="glass-attachment">
+        <div class="attachment-info">
+        <h6><i class="fa-solid fa-camera text-primary me-1"></i> صورة النظارة المرفقة</h6>
+        <p>اضغط على الصورة للتكبير</p>
+        </div>
+        <img src="${exam.glassImagePath}" onclick="enlargeImage('${exam.glassImagePath}')" title="تكبير الصورة" />
+        </div>`;
+        }
+
+        timelineHtml += `
+        <div class="history-item">
+        <div class="history-dot"><i class="fa-solid fa-stethoscope"></i></div>
+        <div class="history-content">
+        <div class="d-flex justify-content-between align-items-center border-bottom pb-3 mb-3">
+        <div class="history-date m-0">
+        <i class="fa-regular fa-calendar-check me-2"></i> ${examDate}
+        </div>
+        <span class="badge bg-light text-secondary border">زيارة سابقة</span>
+        </div>
+
+        <div class="row g-3">
+        <div class="col-md-6">
+        <div class="eye-record-box od-box">
+        <div class="eye-record-title"><i class="fa-solid fa-eye"></i> العين اليمنى (O.D)</div>
+        <div class="measurements-row">
+        <div class="measure-col"><span>SPH</span>${getValHtml(exam.odSph)}</div>
+        <div class="measure-col"><span>CYL</span>${getValHtml(exam.odCyl)}</div>
+        <div class="measure-col"><span>AXIS</span>${getValHtml(exam.odAxis)}</div>
+        <div class="measure-col"><span>ADD</span>${getValHtml(exam.odAdd)}</div>
+        <div class="measure-col"><span>V.A</span>${getValHtml(exam.odva ?? exam.odVa ?? exam.odVA)}</div>
+        </div>
+        </div>
+        </div>
+        <div class="col-md-6">
+        <div class="eye-record-box os-box">
+        <div class="eye-record-title"><i class="fa-solid fa-eye"></i> العين اليسرى (O.S)</div>
+        <div class="measurements-row">
+        <div class="measure-col"><span>SPH</span>${getValHtml(exam.osSph)}</div>
+        <div class="measure-col"><span>CYL</span>${getValHtml(exam.osCyl)}</div>
+        <div class="measure-col"><span>AXIS</span>${getValHtml(exam.osAxis)}</div>
+        <div class="measure-col"><span>ADD</span>${getValHtml(exam.osAdd)}</div>
+        <div class="measure-col"><span>V.A</span>${getValHtml(exam.osva ?? exam.osVa ?? exam.osVA)}</div>
+        </div>
+        </div>
+        </div>
+        </div>
+
+        <div class="exam-details-grid">
+        <div class="detail-item">
+        <label><i class="fa-solid fa-user-doctor me-1"></i> أخصائي البصريات</label>
+        ${getDetailHtml(exam.examinerName)}
+        </div>
+        <div class="detail-item">
+        <label><i class="fa-solid fa-ruler-horizontal me-1"></i> (IPD)</label>
+        ${getDetailHtml(exam.ipd)}
+        </div>
+        <div class="detail-item" style="grid-column: 1 / -1;">
+        <label><i class="fa-solid fa-notes-medical me-1"></i> ملاحظات طبية</label>
+        ${getDetailHtml(exam.remarks)}
+        </div>
+        <div class="detail-item" style="grid-column: 1 / -1;">
+        <label><i class="fa-solid fa-glasses me-1"></i> ملاحظات المعرض وتفاصيل المشتريات</label>
+        ${getDetailHtml(exam.purchaseNotes)}
+        </div>
+        </div>
+
+        ${glassImgHtml}
+        </div>
+        </div>`;
+        });
+
+        $('#historyTimelineContainer').html(timelineHtml).removeClass('d-none');
+        })
+        .fail(function() {
+        $('#historyLoading').addClass('d-none');
+        Swal.fire('خطأ!', 'لا يمكن الاتصال بالخادم.', 'error');
+        });
+        }
+
+        function enlargeImage(src) {
+        $('#enlargedImageDisplay').attr('src', src);
+        $('#imagePreviewModal').modal('show');
+        }
+
+        function openPatientModal() {
+        $('#patientForm')[0].reset();
+        $('#patientForm').removeClass('was-validated');
+        $('#patientId').val(0);
+        $('#IsVIP').prop('checked', false);
+
+        var today = new Date();
+        var yyyy = today.getFullYear();
+        var mm = String(today.getMonth() + 1).padStart(2, '0');
+        var dd = String(today.getDate()).padStart(2, '0');
+        $('#RegistrationDate').val(`${yyyy}-${mm}-${dd}`);
+
+        $('#modalTitle').text('إضافة عميل جديد');
+        $('#patientModal').modal('show');
+        setTimeout(() => { $('#FirstName').focus(); }, 300);
+        }
+
+        function editPatient(id) {
+        Swal.fire({ title: 'جاري جلب البيانات...', allowOutsideClick: false, didOpen: () => { Swal.showLoading() } });
+        $.get('/PatientsController1/GetPatientById/' + id, function (res) {
+        Swal.close();
+        if (res.success) {
+        $('#patientForm').removeClass('was-validated');
+        $('#patientId').val(res.data.id);
+        $('#FirstName').val(res.data.firstName);
+        $('#FatherName').val(res.data.fatherName);
+        $('#FamilyName').val(res.data.familyName);
+
+        if(res.data.registrationDate) {
+        $('#RegistrationDate').val(res.data.registrationDate.substring(0, 10));
+        } else {
+        $('#RegistrationDate').val('');
+        }
+
+        $('#PhoneNumber').val(res.data.phoneNumber);
+        $('#SecondaryPhoneNumber').val(res.data.secondaryPhoneNumber || '');
+        $('#SecondaryPhoneOwner').val(res.data.secondaryPhoneOwner || '');
+        $('#Age').val(res.data.age);
+
+        var jobValue = res.data.job;
+        if (jobValue && jobValue.toString().trim().toUpperCase() === 'NONE') { jobValue = ''; }
+        $('#Job').val(jobValue);
+        $('#Address').val(res.data.address);
+
+        $('#IsVIP').prop('checked', res.data.isVIP);
+
+        $('#modalTitle').text('تعديل بيانات العميل');
+        $('#patientModal').modal('show');
+        } else { Swal.fire('خطأ!', res.message, 'error'); }
+        }).fail(function() { Swal.fire('خطأ!', 'لا يمكن الاتصال بالخادم لجلب البيانات.', 'error'); });
+        }
+
+        function savePatient() {
+        var form = $('#patientForm');
+        if (!form[0].checkValidity()) {
+        form.addClass('was-validated');
+        Swal.fire({ icon: 'warning', title: 'بيانات ناقصة!', text: 'يرجى التأكد من تعبئة جميع الحقول المطلوبة (باللون الأحمر).', confirmButtonColor: '#d33', confirmButtonText: 'حسناً' });
+        return;
+        }
+        var formData = form.serialize();
+        var id = $('#patientId').val();
+        var url = id == 0 ? '/PatientsController1/Create' : '/PatientsController1/Edit';
+
+        var btn = $('#patientModal .btn-primary');
+        var originalText = btn.text();
+        btn.prop('disabled', true).html('<i class="fa-solid fa-spinner fa-spin me-2"></i> جاري الحفظ...');
+
+        $.post(url, formData, function (res) {
+        if (res.success) {
+        $('#patientModal').modal('hide');
+        Swal.fire({ icon: 'success', title: 'ممتاز!', text: res.message, confirmButtonColor: 'var(--brand-color)', timer: 2000, showConfirmButton: false });
+        dataTable.ajax.reload(null, false);
+        }
+        else { Swal.fire({ icon: 'error', title: 'تنبيه', text: res.message, confirmButtonColor: '#d33' }); }
+        }).fail(function() {
+        Swal.fire('خطأ!', 'حدثت مشكلة في الاتصال بالخادم.', 'error');
+        }).always(function() {
+        btn.prop('disabled', false).text(originalText);
+        });
+        }
+
+        function deletePatient(id) {
+        Swal.fire({ title: 'هل أنت متأكد؟', text: "لن تتمكن من التراجع عن هذا الإجراء! سيتم حذف كل قياسات العميل المتربطة به.", icon: 'warning', showCancelButton: true, confirmButtonColor: '#ef4444', cancelButtonColor: '#828c9b', confirmButtonText: 'نعم، احذف الملف', cancelButtonText: 'إلغاء', reverseButtons: true }).then((result) => {
+        if (result.isConfirmed) {
+        var token = $('input[name="__RequestVerificationToken"]').val();
+        $.post('/PatientsController1/Delete', { id: id, __RequestVerificationToken: token }, function (res) {
+        if (res.success) { Swal.fire({ icon: 'success', title: 'تم الحذف!', text: res.message, confirmButtonColor: 'var(--brand-color)', timer: 2000, showConfirmButton: false }); dataTable.ajax.reload(null, false); }
+        else { Swal.fire('خطأ!', res.message, 'error'); }
+        }).fail(function(xhr) {
+        if (xhr.status === 403 || xhr.status === 401) { Swal.fire('صلاحيات غير كافية!', 'تحتاج إلى صلاحيات مدير (Admin) لتتمكن من حذف المرضى.', 'error'); }
+        else { Swal.fire('خطأ خادم!', 'حدث خطأ في النظام الداخلي أثناء محاولة الحذف.', 'error'); }
+        });
+        }
+        })
+        }
+    </script>
+}

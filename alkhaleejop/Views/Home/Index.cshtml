@@ -1,0 +1,520 @@
+﻿@{
+    ViewData["Title"] = "لوحة التحكم الرئيسية";
+}
+
+<style>
+    :root {
+        --card-bg: #ffffff;
+        --border-color: #e2e8f0;
+        --text-dark: #0f172a;
+        --text-muted: #64748b;
+        --shadow-sm: 0 1px 3px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.03);
+        --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -1px rgba(0,0,0,0.03);
+        --shadow-hover: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04);
+    }
+
+    .dashboard-header {
+        margin-bottom: 2.5rem;
+    }
+
+        .dashboard-header h3 {
+            font-weight: 800;
+            color: var(--text-dark);
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
+        }
+
+        .dashboard-header p {
+            color: var(--text-muted);
+            font-size: 1rem;
+            font-weight: 600;
+            margin: 0;
+        }
+
+    @@keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .animate-fade {
+        animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        opacity: 0;
+    }
+
+    .delay-1 {
+        animation-delay: 0.1s;
+    }
+
+    .delay-2 {
+        animation-delay: 0.2s;
+    }
+
+    .delay-3 {
+        animation-delay: 0.3s;
+    }
+
+    .delay-4 {
+        animation-delay: 0.4s;
+    }
+
+    .kpi-card {
+        border-radius: 20px;
+        padding: 1.8rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        box-shadow: var(--shadow-md);
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        height: 100%;
+        position: relative;
+        overflow: hidden;
+        border: none;
+    }
+
+        .kpi-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .kpi-card::after {
+            content: '';
+            position: absolute;
+            top: -20px;
+            right: -20px;
+            width: 120px;
+            height: 120px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            z-index: 0;
+        }
+
+    .bg-grad-blue {
+        background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+    }
+
+    .bg-grad-emerald {
+        background: linear-gradient(135deg, #10b981 0%, #047857 100%);
+    }
+
+    .bg-grad-purple {
+        background: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%);
+    }
+
+    .bg-grad-orange {
+        background: linear-gradient(135deg, #f59e0b 0%, #b45309 100%);
+    }
+
+    .kpi-info {
+        z-index: 1;
+    }
+
+        .kpi-info h2 {
+            font-size: 2.2rem;
+            font-weight: 900;
+            color: #ffffff;
+            margin: 0 0 5px 0;
+        }
+
+        .kpi-info p {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: rgba(255, 255, 255, 0.9);
+            margin: 0;
+        }
+
+    .icon-box {
+        width: 65px;
+        height: 65px;
+        border-radius: 18px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2rem;
+        background-color: rgba(255, 255, 255, 0.2);
+        color: #ffffff;
+        transition: transform 0.3s ease;
+        z-index: 1;
+    }
+
+    .kpi-card:hover .icon-box {
+        transform: scale(1.1) rotate(5deg);
+    }
+
+    .dash-box {
+        background: var(--card-bg);
+        border-radius: 24px;
+        border: 1px solid var(--border-color);
+        padding: 2rem;
+        box-shadow: var(--shadow-sm);
+        height: 100%;
+    }
+
+    .dash-title {
+        font-weight: 800;
+        color: var(--text-dark);
+        margin-bottom: 2rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-size: 1.2rem;
+    }
+
+        .dash-title .icon-bg {
+            background: #f1f5f9;
+            width: 35px;
+            height: 35px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+            color: var(--brand-color);
+            margin-left: 10px;
+        }
+
+    .visit-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .visit-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 1rem 0;
+        border-bottom: 1px dashed #f1f5f9;
+    }
+
+        .visit-item:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+    .visit-user {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .avatar {
+        width: 45px;
+        height: 45px;
+        border-radius: 14px;
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        color: var(--brand-color);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+    }
+
+    .visit-details h6 {
+        margin: 0;
+        font-weight: 800;
+        color: var(--text-dark);
+        font-size: 1rem;
+    }
+
+    .visit-details span {
+        font-size: 0.8rem;
+        color: var(--text-muted);
+        font-weight: 600;
+        display: block;
+        margin-top: 3px;
+    }
+
+    .vip-tag {
+        background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+        color: white;
+        font-size: 0.65rem;
+        padding: 2px 6px;
+        border-radius: 6px;
+        margin-right: 6px;
+        box-shadow: 0 2px 4px rgba(245, 158, 11, 0.3);
+        vertical-align: middle;
+    }
+
+    .skeleton {
+        background: #f1f5f9;
+        border-radius: 8px;
+        width: 100%;
+        height: 20px;
+        animation: pulse 1.5s infinite;
+    }
+
+    @@keyframes pulse {
+        0% {
+            opacity: 1;
+        }
+
+        50% {
+            opacity: 0.5;
+        }
+
+        100% {
+            opacity: 1;
+        }
+    }
+
+    @@media (max-width: 991px) {
+        .dash-box {
+            padding: 1.5rem;
+        }
+    }
+
+    @@media (max-width: 768px) {
+        .kpi-card {
+            padding: 1.5rem;
+        }
+
+        .kpi-info h2 {
+            font-size: 1.8rem;
+        }
+
+        .icon-box {
+            width: 50px;
+            height: 50px;
+            font-size: 1.4rem;
+            border-radius: 14px;
+        }
+
+        .dash-title {
+            font-size: 1.1rem;
+        }
+    }
+</style>
+
+<div class="dashboard-header animate-fade">
+    <h3 id="dynamicGreeting">مرحباً، أهلاً بك في النظام</h3>
+    <p>نظرة عامة على أداء الخليج للبصريات وإحصائيات العملاء</p>
+</div>
+
+<div class="row g-4 mb-4">
+    <div class="col-xl-3 col-lg-6 col-md-6 col-12 animate-fade delay-1">
+        <div class="kpi-card bg-grad-blue">
+            <div class="kpi-info">
+                <p>إجمالي العملاء</p>
+                <h2 id="kpi-patients"><div class="skeleton" style="width: 60px; height: 40px; margin-top: 5px; background: rgba(255,255,255,0.3);"></div></h2>
+            </div>
+            <div class="icon-box"><i class="fa-solid fa-users"></i></div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-lg-6 col-md-6 col-12 animate-fade delay-2">
+        <div class="kpi-card bg-grad-emerald">
+            <div class="kpi-info">
+                <p>فحوصات هذا الشهر</p>
+                <h2 id="kpi-exams-month"><div class="skeleton" style="width: 60px; height: 40px; margin-top: 5px; background: rgba(255,255,255,0.3);"></div></h2>
+            </div>
+            <div class="icon-box"><i class="fa-solid fa-calendar-check"></i></div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-lg-6 col-md-6 col-12 animate-fade delay-3">
+        <div class="kpi-card bg-grad-purple">
+            <div class="kpi-info">
+                <p>إجمالي الفحوصات</p>
+                <h2 id="kpi-total-exams"><div class="skeleton" style="width: 60px; height: 40px; margin-top: 5px; background: rgba(255,255,255,0.3);"></div></h2>
+            </div>
+            <div class="icon-box"><i class="fa-solid fa-microscope"></i></div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-lg-6 col-md-6 col-12 animate-fade delay-4">
+        <div class="kpi-card bg-grad-orange">
+            <div class="kpi-info">
+                <p>تنبيهات المواعيد</p>
+                <h2 id="kpi-reminders"><div class="skeleton" style="width: 60px; height: 40px; margin-top: 5px; background: rgba(255,255,255,0.3);"></div></h2>
+            </div>
+            <div class="icon-box"><i class="fa-solid fa-bell"></i></div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4 mb-4">
+    <div class="col-xl-8 col-lg-12 animate-fade delay-3">
+        <div class="dash-box">
+            <div class="dash-title">
+                <div><span class="icon-bg"><i class="fa-solid fa-chart-area"></i></span> معدل الفحوصات (6 شهور)</div>
+            </div>
+            <div id="chartLoading" class="text-center py-5"><div class="spinner-border" style="color: var(--brand-color);" role="status"></div></div>
+            <div id="growthChart" style="min-height: 320px;"></div>
+        </div>
+    </div>
+
+    <div class="col-xl-4 col-lg-12 animate-fade delay-4">
+        <div class="dash-box d-flex flex-column">
+            <div class="dash-title">
+                <div><span class="icon-bg"><i class="fa-solid fa-clock-rotate-left"></i></span> أحدث الزيارات</div>
+                <a href="/ExaminationsController1/Index" class="btn btn-sm btn-light border fw-bold" style="color: var(--brand-color); border-radius: 8px;">الكل</a>
+            </div>
+
+            <div class="flex-grow-1">
+                <ul class="visit-list" id="recentVisitsBody">
+                    <li class="visit-item">
+                        <div class="visit-user w-100">
+                            <div class="skeleton" style="width: 45px; height: 45px; border-radius: 14px; flex-shrink: 0;"></div>
+                            <div class="w-100">
+                                <div class="skeleton mb-1" style="width: 60%; height: 15px;"></div>
+                                <div class="skeleton" style="width: 30%; height: 10px;"></div>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="visit-item">
+                        <div class="visit-user w-100">
+                            <div class="skeleton" style="width: 45px; height: 45px; border-radius: 14px; flex-shrink: 0;"></div>
+                            <div class="w-100">
+                                <div class="skeleton mb-1" style="width: 50%; height: 15px;"></div>
+                                <div class="skeleton" style="width: 40%; height: 10px;"></div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+
+    <script>
+        $(document).ready(function () {
+        setDynamicGreeting();
+        loadDashboardData();
+        });
+
+        function setDynamicGreeting() {
+        var hour = new Date().getHours();
+        var greeting = hour >= 12 ? 'مساء الخير' : 'صباح الخير';
+        $('#dynamicGreeting').text(greeting + '، أهلاً بك في النظام 👋');
+        }
+
+        function loadDashboardData() {
+        $.get('/Home/GetDashboardStats', function (res) {
+        if (res.success) {
+        $('#kpi-patients').html(res.totalPatients);
+        $('#kpi-exams-month').html(res.examsThisMonth);
+        $('#kpi-total-exams').html(res.totalExams);
+        $('#kpi-reminders').html(res.pendingReminders);
+
+        var list = $('#recentVisitsBody');
+        list.empty();
+
+        if (res.recentVisits && res.recentVisits.length > 0) {
+        res.recentVisits.forEach(function (visit) {
+        var vipTag = visit.isVip ? '<span class="vip-tag"><i class="fa-solid fa-crown"></i> VIP</span>' : '';
+        var phoneDisplay = visit.phoneNumber ? visit.phoneNumber : 'لا يوجد رقم';
+
+        var li = `
+        <li class="visit-item">
+        <div class="visit-user">
+        <div class="avatar"><i class="fa-solid fa-user"></i></div>
+        <div class="visit-details">
+        <h6>${visit.patientName} ${vipTag}</h6>
+        <span><i class="fa-regular fa-clock me-1"></i> ${visit.date}</span>
+        </div>
+        </div>
+        <div class="text-end">
+        <span class="badge bg-light text-dark border" dir="ltr" style="font-size: 0.85rem; letter-spacing: 0.5px;">
+        <i class="fa-solid fa-phone fa-xs text-muted me-1"></i> ${phoneDisplay}
+        </span>
+        </div>
+        </li>
+        `;
+        list.append(li);
+        });
+        } else {
+        list.append('<li class="text-center text-muted py-4"><i class="fa-regular fa-folder-open mb-2" style="font-size: 2rem;"></i><br>لا توجد زيارات مسجلة.</li>');
+        }
+
+        $('#chartLoading').hide();
+        renderChart(res.chartLabels, res.chartData);
+        } else {
+        $('#chartLoading').html('<p class="text-danger fw-bold">فشل جلب البيانات</p>');
+        }
+        }).fail(function () {
+        $('#chartLoading').html('<p class="text-danger fw-bold">حدث خطأ في الاتصال بالخادم</p>');
+        });
+        }
+
+        function renderChart(labels, dataSeries) {
+        var brandColor = '#7a1c4b'; 
+
+        var options = {
+        series: [{
+        name: 'عدد الفحوصات',
+        data: dataSeries
+        }],
+        chart: {
+        type: 'area',
+        height: 320,
+        fontFamily: 'Cairo, sans-serif',
+        toolbar: { show: false },
+        zoom: { enabled: false },
+        dropShadow: {
+        enabled: true,
+        top: 5,
+        left: 0,
+        blur: 4,
+        opacity: 0.15,
+        color: brandColor
+        }
+        },
+        colors: [brandColor],
+        fill: {
+        type: 'gradient',
+        gradient: {
+        shadeIntensity: 1,
+        opacityFrom: 0.4,
+        opacityTo: 0.05,
+        stops: [0, 90, 100]
+        }
+        },
+        dataLabels: { enabled: false },
+        stroke: {
+        curve: 'smooth',
+        width: 4
+        },
+        markers: {
+        size: 5,
+        colors: ["#fff"],
+        strokeColors: brandColor,
+        strokeWidth: 3,
+        hover: { size: 7 }
+        },
+        xaxis: {
+        categories: labels,
+        axisBorder: { show: false },
+        axisTicks: { show: false },
+        labels: { style: { colors: '#94a3b8', fontSize: '13px', fontWeight: 700 } },
+        crosshairs: { show: false }
+        },
+        yaxis: {
+        labels: { style: { colors: '#94a3b8', fontSize: '13px', fontWeight: 700 } }
+        },
+        grid: {
+        borderColor: '#f1f5f9',
+        strokeDashArray: 5,
+        yaxis: { lines: { show: true } },
+        xaxis: { lines: { show: false } }
+        },
+        tooltip: {
+        theme: 'light',
+        y: { formatter: function (val) { return val + " فحص" } }
+        }
+        };
+
+        var chart = new ApexCharts(document.querySelector("#growthChart"), options);
+        chart.render();
+        }
+    </script>
+}

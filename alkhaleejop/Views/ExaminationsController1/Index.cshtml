@@ -1,0 +1,1484 @@
+﻿@{
+    ViewData["Title"] = "الفحوصات والقياسات";
+}
+
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" />
+<link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.bootstrap5.min.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+<style>
+    .page-header-action {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+        flex-wrap: wrap;
+        gap: 15px;
+    }
+
+    .card-custom {
+        background: #ffffff;
+        border: none;
+        border-radius: 16px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.03);
+        padding: 2rem;
+        transition: all 0.3s ease;
+    }
+
+    #examsTable {
+        border-collapse: separate;
+        border-spacing: 0;
+        width: 100% !important;
+    }
+
+        #examsTable thead th {
+            background-color: #f8f9fc;
+            color: #6c757d;
+            font-weight: 700;
+            font-size: 0.85rem;
+            padding: 1.2rem 1rem;
+            border-bottom: 2px solid #eaedf2;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-top: none;
+            white-space: nowrap;
+        }
+
+        #examsTable tbody td {
+            padding: 1.2rem 1rem;
+            vertical-align: middle;
+            border-bottom: 1px solid #f0f2f5;
+            font-size: 0.95rem;
+            color: #495057;
+        }
+
+        #examsTable tbody tr:hover td {
+            background-color: #fdfdfd;
+        }
+
+    .actions-wrapper {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        flex-wrap: wrap;
+    }
+
+    .btn-action {
+        width: 36px;
+        height: 36px;
+        border-radius: 10px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        border: none;
+        font-size: 0.95rem;
+        flex-shrink: 0;
+    }
+
+        .btn-action:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+    .btn-view {
+        background-color: #f3f0ff;
+        color: #8b5cf6;
+    }
+
+        .btn-view:hover {
+            background-color: #8b5cf6;
+            color: #fff;
+        }
+
+    .btn-edit {
+        background-color: #f0f4ff;
+        color: #3b82f6;
+    }
+
+        .btn-edit:hover {
+            background-color: #3b82f6;
+            color: #fff;
+        }
+
+    .btn-delete {
+        background-color: #fee2e2;
+        color: #ef4444;
+    }
+
+        .btn-delete:hover {
+            background-color: #ef4444;
+            color: #fff;
+        }
+
+    .btn-contact {
+        background-color: #eafbf1;
+        color: #22c55e;
+    }
+
+        .btn-contact:hover {
+            background-color: #22c55e;
+            color: #fff;
+        }
+
+    .btn-image {
+        background-color: #fff7ed;
+        color: #ea580c;
+        border: 1px solid #ffedd5;
+    }
+
+        .btn-image:hover {
+            background-color: #ea580c;
+            color: #fff;
+        }
+
+    .top-controls-wrapper {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.5rem;
+        flex-wrap: wrap;
+        gap: 15px;
+    }
+
+    div.dataTables_wrapper div.dataTables_length {
+        margin: 0;
+    }
+
+        div.dataTables_wrapper div.dataTables_length label {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: #6c757d;
+            font-weight: 600;
+            margin-bottom: 0;
+        }
+
+        div.dataTables_wrapper div.dataTables_length select {
+            border-radius: 8px;
+            border: 1px solid #eaedf2;
+            padding: 0.4rem 1.8rem 0.4rem 0.8rem;
+            outline: none;
+            color: #495057;
+            box-shadow: none;
+        }
+
+            div.dataTables_wrapper div.dataTables_length select:focus {
+                border-color: var(--brand-color);
+            }
+
+    div.dataTables_wrapper div.dataTables_filter {
+        margin: 0;
+    }
+
+        div.dataTables_wrapper div.dataTables_filter input {
+            border-radius: 10px;
+            border: 2px solid #eaedf2;
+            padding: 0.6rem 1.2rem;
+            outline: none;
+            box-shadow: none;
+            transition: border-color 0.3s ease;
+            width: 250px;
+            margin-right: 10px;
+        }
+
+            div.dataTables_wrapper div.dataTables_filter input:focus {
+                border-color: var(--brand-color);
+            }
+
+    div.dt-buttons {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+
+        div.dt-buttons .btn {
+            background-color: #ffffff !important;
+            border: 1px solid #eaedf2 !important;
+            color: #495057 !important;
+            border-radius: 10px !important;
+            font-weight: 600 !important;
+            padding: 0.5rem 1.2rem !important;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.02) !important;
+            transition: all 0.2s ease !important;
+        }
+
+            div.dt-buttons .btn:hover {
+                background-color: #f8f9fc !important;
+                border-color: #d1d5db !important;
+                transform: translateY(-2px);
+            }
+
+    .eye-card {
+        background: #fdfdfe;
+        border: 1px solid #e2e8f0;
+        border-radius: 14px;
+        padding: 1.5rem;
+        transition: border-color 0.3s;
+        margin-bottom: 1rem;
+    }
+
+        .eye-card:focus-within {
+            border-color: var(--brand-color);
+            box-shadow: 0 0 0 4px rgba(122, 28, 75, 0.05);
+        }
+
+    .eye-title {
+        font-weight: 800;
+        font-size: 1.05rem;
+        margin-bottom: 1.2rem;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .eye-right-title {
+        color: #dc2626;
+    }
+
+    .eye-left-title {
+        color: #2563eb;
+    }
+
+    .opt-input {
+        direction: ltr;
+        text-align: center;
+        font-weight: 700;
+        font-size: 1.1rem;
+        letter-spacing: 1px;
+        color: #1e293b;
+    }
+
+        .opt-input:focus {
+            background-color: #f8fafc;
+        }
+
+    .select2-container .select2-selection--single {
+        height: calc(3.5rem + 2px);
+        padding: 0.75rem;
+        border-radius: 10px;
+        border: 1px solid #dee2e6;
+    }
+
+    .select2-container--default .select2-selection--single .select2-selection__arrow {
+        top: 15px;
+        right: 10px;
+    }
+
+    .select2-selection__rendered {
+        font-weight: 600;
+        color: #334155 !important;
+    }
+
+    .modern-input {
+        background-color: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 10px;
+        padding: 0.7rem 1rem;
+        transition: all 0.3s;
+        color: #1e293b;
+        font-weight: 600;
+        width: 100%;
+    }
+
+        .modern-input:focus {
+            background-color: #ffffff;
+            border-color: var(--brand-color);
+            box-shadow: 0 0 0 3px rgba(122, 28, 75, 0.1);
+        }
+
+    textarea.modern-input {
+        resize: vertical;
+        min-height: 90px;
+        line-height: 1.6;
+    }
+
+    .modern-label {
+        font-weight: 700;
+        color: #334155;
+        font-size: 0.95rem;
+        margin-bottom: 0.6rem;
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        gap: 8px;
+        text-align: right;
+    }
+
+        .modern-label i {
+            color: #64748b;
+        }
+
+    .btn-quick-add {
+        background: #f8fafc;
+        border: 1px solid #cbd5e1;
+        color: var(--brand-color);
+        font-weight: 700;
+        border-radius: 10px;
+        padding: 0.7rem 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 5px;
+        transition: all 0.2s;
+        height: calc(3.5rem + 2px);
+        width: 100%;
+    }
+
+        .btn-quick-add:hover {
+            background: var(--brand-color);
+            color: #fff;
+            border-color: var(--brand-color);
+        }
+
+    .smart-date-btn {
+        background-color: #f8fafc;
+        border: 1px solid #cbd5e1;
+        color: #475569;
+        font-weight: 700;
+        font-size: 0.85rem;
+        transition: all 0.2s;
+        flex: 1;
+        text-align: center;
+    }
+
+        .smart-date-btn:hover {
+            background-color: var(--brand-color);
+            color: #fff;
+            border-color: var(--brand-color);
+        }
+
+    .file-upload-wrapper {
+        position: relative;
+        width: 100%;
+        height: 60px;
+        border: 2px dashed #cbd5e1;
+        border-radius: 10px;
+        background-color: #f8fafc;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+
+        .file-upload-wrapper:hover {
+            border-color: var(--brand-color);
+            background-color: #fdfafb;
+        }
+
+    .file-upload-input {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        cursor: pointer;
+    }
+
+    .file-upload-text {
+        font-weight: 600;
+        color: #64748b;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        z-index: 1;
+        pointer-events: none;
+    }
+
+    .prescription-card {
+        background: #fff;
+        border: 2px solid #eaedf2;
+        border-radius: 12px;
+        padding: 2rem;
+        margin-top: 1rem;
+        width: 100%;
+        overflow-x: auto;
+    }
+
+    .prescription-header {
+        text-align: center;
+        border-bottom: 2px dashed #e2e8f0;
+        padding-bottom: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .prescription-logo {
+        color: var(--brand-color);
+        font-size: 2.5rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .prescription-table {
+        width: 100%;
+        text-align: center;
+        direction: ltr;
+        border-collapse: collapse;
+        margin-bottom: 1.5rem;
+        min-width: 500px;
+    }
+
+        .prescription-table th {
+            background-color: #f8fafc;
+            padding: 12px;
+            border: 1px solid #e2e8f0;
+            font-weight: 700;
+            color: #475569;
+            font-size: 0.9rem;
+        }
+
+        .prescription-table td {
+            padding: 12px;
+            border: 1px solid #e2e8f0;
+            font-weight: 700;
+            color: #1e293b;
+            font-size: 1.05rem;
+        }
+
+    .eye-label {
+        background-color: #f1f5f9 !important;
+        font-weight: 800 !important;
+        font-size: 0.9rem !important;
+    }
+
+    .prescription-info-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+        background: #f8fafc;
+        padding: 1.5rem;
+        border-radius: 10px;
+        margin-bottom: 15px;
+        border: 1px solid #eaedf2;
+    }
+
+    .info-label {
+        font-size: 0.85rem;
+        color: #64748b;
+        display: block;
+        margin-bottom: 6px;
+        font-weight: 600;
+    }
+
+    .info-value {
+        font-weight: 700;
+        color: #1e293b;
+        font-size: 1.05rem;
+        white-space: pre-line;
+    }
+
+
+    @@media (max-width: 991px) {
+        .top-controls-wrapper {
+            flex-direction: column;
+            align-items: stretch;
+            gap: 15px;
+        }
+
+        .left-controls {
+            flex-direction: column;
+            align-items: stretch !important;
+            gap: 10px !important;
+            width: 100%;
+        }
+
+        div.dt-buttons {
+            justify-content: center;
+            width: 100%;
+        }
+
+            div.dt-buttons .btn {
+                flex: 1;
+                justify-content: center;
+                padding: 0.6rem;
+                font-size: 0.9rem;
+            }
+
+        div.dataTables_wrapper div.dataTables_filter {
+            text-align: right;
+            width: 100%;
+        }
+
+            div.dataTables_wrapper div.dataTables_filter input {
+                width: 100%;
+                margin: 0;
+                margin-top: 10px;
+            }
+
+        div.dataTables_wrapper div.dataTables_length label {
+            justify-content: space-between;
+            width: 100%;
+        }
+
+        .prescription-info-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    @@media (max-width: 576px) {
+        .page-header-action {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+            .page-header-action button {
+                width: 100%;
+                justify-content: center;
+            }
+
+        .card-custom {
+            padding: 1rem;
+        }
+
+        .eye-card {
+            padding: 1rem 0.75rem;
+        }
+
+        .form-floating > label {
+            font-size: 0.75rem;
+            padding: 1rem 0.5rem;
+        }
+
+        .opt-input {
+            font-size: 0.95rem;
+            padding-top: 1.6rem !important;
+            padding-bottom: 0.4rem !important;
+        }
+
+        .smart-date-btn {
+            font-size: 0.75rem;
+            padding: 0.3rem;
+        }
+
+        .btn-action {
+            width: 32px;
+            height: 32px;
+            font-size: 0.85rem;
+        }
+
+        .actions-wrapper {
+            justify-content: flex-start;
+        }
+
+        .prescription-card {
+            padding: 1rem;
+        }
+
+        .modal-body {
+            padding: 1rem !important;
+        }
+    }
+</style>
+
+<div class="page-header-action">
+    <div>
+        <h3 class="fw-bold mb-1" style="color: var(--text-main);">سجل الفحوصات الطبية</h3>
+        <span class="text-muted" style="font-size: 0.9rem;">إدارة دقيقة لقياسات النظر والوصفات</span>
+    </div>
+    <button class="btn btn-primary px-4 py-2.5 rounded-3 fw-bold shadow-sm d-flex align-items-center" style="background-color: var(--brand-color); border-color: var(--brand-color);" onclick="openExamModal()">
+        <i class="fa-solid fa-plus me-2"></i> إضافة فحص جديد
+    </button>
+</div>
+
+<div class="card-custom">
+    <table id="examsTable" class="table dt-responsive nowrap w-100">
+        <thead>
+            <tr>
+                <th>التاريخ والوقت</th>
+                <th>اسم العميل</th>
+                <th>أرقام الهواتف</th>
+                <th>الموعد القادم</th>
+                <th class="text-center">الإجراءات</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>
+
+<div class="modal fade" id="examModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div class="modal-content border-0 shadow-lg rounded-4">
+            <div class="modal-header border-bottom-0 pb-0 mt-3">
+                <h5 class="modal-title fw-bold px-3" id="modalTitle" style="color: var(--brand-color);">إضافة فحص طبي</h5>
+                <button type="button" class="btn-close me-3" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4">
+                <form id="examForm" class="needs-validation" novalidate enctype="multipart/form-data">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" id="examId" name="Id" value="0" />
+
+                    <div class="row g-3 mb-4 align-items-start bg-light p-3 rounded-4 mx-0 border">
+                        <div class="col-lg-5 col-md-12 col-sm-12">
+                            <label class="fw-bold text-dark mb-2">العميل <span class="text-danger">*</span></label>
+                            <div class="d-flex gap-2">
+                                <div style="flex-grow: 1;">
+                                    <select class="form-control" id="PatientId" name="PatientId" style="width: 100%;" required tabindex="1"></select>
+                                    <div class="invalid-feedback">يرجى اختيار العميل أولاً.</div>
+                                </div>
+                                <div id="quickAddPatientWrapper">
+                                    <button type="button" class="btn-quick-add" onclick="openQuickPatientModal()" title="إضافة عميل جديد" tabindex="-1">
+                                        <i class="fa-solid fa-user-plus"></i> <span class="d-none d-sm-inline">جديد</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-6 col-sm-12">
+                            <label class="fw-bold text-dark mb-2">الموعد القادم <span class="text-danger">*</span></label>
+                            <input type="date" class="form-control fw-bold text-primary modern-input" id="NextExamDate" name="NextExamDate" required tabindex="2">
+                            <div class="d-flex justify-content-between mt-2 gap-1">
+                                <button type="button" class="btn smart-date-btn rounded-2" tabindex="-1" onclick="setSmartDate(2)">شهرين</button>
+                                <button type="button" class="btn smart-date-btn rounded-2" tabindex="-1" onclick="setSmartDate(3)">3 أشهر</button>
+                                <button type="button" class="btn smart-date-btn rounded-2" tabindex="-1" onclick="setSmartDate(6)">6 أشهر</button>
+                            </div>
+                            <div class="invalid-feedback">يرجى تحديد تاريخ الفحص.</div>
+                        </div>
+                        <div class="col-lg-4 col-md-6 col-sm-12">
+                            <label class="fw-bold text-dark mb-2"><i class="fa-solid fa-camera"></i> صورة النظارة / الوصفة</label>
+                            <div class="file-upload-wrapper" id="uploadWrapper">
+                                <input type="file" id="ImageFile" name="ImageFile" class="file-upload-input" accept="image/*" capture="environment" onchange="previewFileName(this)" tabindex="3">
+                                <div class="file-upload-text" id="uploadText">
+                                    <i class="fa-solid fa-camera fs-5"></i>
+                                    <span>التقط أو ارفع صورة</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-lg-12 mb-4">
+                            <div class="eye-card">
+                                <div class="eye-title eye-right-title">
+                                    <i class="fa-solid fa-eye"></i> العين اليمنى (Right - O.D)
+                                </div>
+                                <div class="row g-2">
+                                    <div class="col-4">
+                                        <div class="input-group" style="direction: ltr;">
+                                            <button class="btn btn-light border px-1 px-sm-2 fw-bold" type="button" tabindex="-1" onclick="toggleSign('ODAxis', '-')">-</button>
+                                            <div class="form-floating" style="flex: 1;">
+                                                <input type="text" inputmode="decimal" class="form-control opt-input rounded-0" id="ODAxis" name="ODAxis" placeholder="AXIS" oninput="this.value = this.value.replace(/[^0-9\.\+\-]/g, '')" tabindex="6">
+                                                <label>AXIS</label>
+                                            </div>
+                                            <button class="btn btn-light border px-1 px-sm-2 fw-bold" type="button" tabindex="-1" onclick="toggleSign('ODAxis', '+')">+</button>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-4">
+                                        <div class="input-group" style="direction: ltr;">
+                                            <button class="btn btn-light border px-1 px-sm-2 fw-bold" type="button" tabindex="-1" onclick="toggleSign('ODCyl', '-')">-</button>
+                                            <div class="form-floating" style="flex: 1;">
+                                                <input type="text" inputmode="decimal" class="form-control opt-input rounded-0" id="ODCyl" name="ODCyl" placeholder="CYL" oninput="this.value = this.value.replace(/[^0-9\.\+\-]/g, '')" tabindex="5">
+                                                <label>CYL</label>
+                                            </div>
+                                            <button class="btn btn-light border px-1 px-sm-2 fw-bold" type="button" tabindex="-1" onclick="toggleSign('ODCyl', '+')">+</button>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-4">
+                                        <div class="input-group" style="direction: ltr;">
+                                            <button class="btn btn-light border px-1 px-sm-2 fw-bold" type="button" tabindex="-1" onclick="toggleSign('ODSph', '-')">-</button>
+                                            <div class="form-floating" style="flex: 1;">
+                                                <input type="text" inputmode="decimal" class="form-control opt-input rounded-0" id="ODSph" name="ODSph" placeholder="SPH" oninput="this.value = this.value.replace(/[^0-9\.\+\-]/g, '')" tabindex="4">
+                                                <label>SPH</label>
+                                            </div>
+                                            <button class="btn btn-light border px-1 px-sm-2 fw-bold" type="button" tabindex="-1" onclick="toggleSign('ODSph', '+')">+</button>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-6 mt-3">
+                                        <div class="form-floating" style="direction: ltr;">
+                                            <input type="text" class="form-control opt-input" id="ODVA" name="ODVA" placeholder="VA" tabindex="7">
+                                            <label>V.A</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-6 mt-3">
+                                        <div class="input-group" style="direction: ltr;">
+                                            <button class="btn btn-light border px-2 px-sm-3 fw-bold" type="button" tabindex="-1" onclick="toggleSign('ODAdd', '-')">-</button>
+                                            <div class="form-floating" style="flex: 1;">
+                                                <input type="text" inputmode="decimal" class="form-control opt-input rounded-0" id="ODAdd" name="ODAdd" placeholder="ADD" oninput="this.value = this.value.replace(/[^0-9\.\+\-]/g, '')" tabindex="8">
+                                                <label>ADD</label>
+                                            </div>
+                                            <button class="btn btn-light border px-2 px-sm-3 fw-bold" type="button" tabindex="-1" onclick="toggleSign('ODAdd', '+')">+</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- العين اليسرى -->
+                        <div class="col-lg-12 mb-2">
+                            <div class="eye-card">
+                                <div class="eye-title eye-left-title">
+                                    <i class="fa-solid fa-eye"></i> العين اليسرى (Left - O.S)
+                                </div>
+                                <div class="row g-2">
+                                    <div class="col-4">
+                                        <div class="input-group" style="direction: ltr;">
+                                            <button class="btn btn-light border px-1 px-sm-2 fw-bold" type="button" tabindex="-1" onclick="toggleSign('OSAxis', '-')">-</button>
+                                            <div class="form-floating" style="flex: 1;">
+                                                <input type="text" inputmode="decimal" class="form-control opt-input rounded-0" id="OSAxis" name="OSAxis" placeholder="AXIS" oninput="this.value = this.value.replace(/[^0-9\.\+\-]/g, '')" tabindex="11">
+                                                <label>AXIS</label>
+                                            </div>
+                                            <button class="btn btn-light border px-1 px-sm-2 fw-bold" type="button" tabindex="-1" onclick="toggleSign('OSAxis', '+')">+</button>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-4">
+                                        <div class="input-group" style="direction: ltr;">
+                                            <button class="btn btn-light border px-1 px-sm-2 fw-bold" type="button" tabindex="-1" onclick="toggleSign('OSCyl', '-')">-</button>
+                                            <div class="form-floating" style="flex: 1;">
+                                                <input type="text" inputmode="decimal" class="form-control opt-input rounded-0" id="OSCyl" name="OSCyl" placeholder="CYL" oninput="this.value = this.value.replace(/[^0-9\.\+\-]/g, '')" tabindex="10">
+                                                <label>CYL</label>
+                                            </div>
+                                            <button class="btn btn-light border px-1 px-sm-2 fw-bold" type="button" tabindex="-1" onclick="toggleSign('OSCyl', '+')">+</button>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-4">
+                                        <div class="input-group" style="direction: ltr;">
+                                            <button class="btn btn-light border px-1 px-sm-2 fw-bold" type="button" tabindex="-1" onclick="toggleSign('OSSph', '-')">-</button>
+                                            <div class="form-floating" style="flex: 1;">
+                                                <input type="text" inputmode="decimal" class="form-control opt-input rounded-0" id="OSSph" name="OSSph" placeholder="SPH" oninput="this.value = this.value.replace(/[^0-9\.\+\-]/g, '')" tabindex="9">
+                                                <label>SPH</label>
+                                            </div>
+                                            <button class="btn btn-light border px-1 px-sm-2 fw-bold" type="button" tabindex="-1" onclick="toggleSign('OSSph', '+')">+</button>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-6 mt-3">
+                                        <div class="form-floating" style="direction: ltr;">
+                                            <input type="text" class="form-control opt-input" id="OSVA" name="OSVA" placeholder="VA" tabindex="12">
+                                            <label>V.A</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-6 mt-3">
+                                        <div class="input-group" style="direction: ltr;">
+                                            <button class="btn btn-light border px-2 px-sm-3 fw-bold" type="button" tabindex="-1" onclick="toggleSign('OSAdd', '-')">-</button>
+                                            <div class="form-floating" style="flex: 1;">
+                                                <input type="text" inputmode="decimal" class="form-control opt-input rounded-0" id="OSAdd" name="OSAdd" placeholder="ADD" oninput="this.value = this.value.replace(/[^0-9\.\+\-]/g, '')" tabindex="13">
+                                                <label>ADD</label>
+                                            </div>
+                                            <button class="btn btn-light border px-2 px-sm-3 fw-bold" type="button" tabindex="-1" onclick="toggleSign('OSAdd', '+')">+</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row g-3 mt-2">
+                        <div class="col-lg-4 col-md-6 col-sm-12">
+                            <label for="IPD" class="modern-label">
+                                <i class="fa-solid fa-ruler-horizontal"></i>
+                                <span>(IPD)</span>
+                            </label>
+                            <input type="text" oninput="this.value = this.value.replace(/[^0-9\.\+\-]/g, '')" class="form-control modern-input" style="direction: ltr; text-align: left;" id="IPD" name="IPD" placeholder="مثال: 62" tabindex="14">
+                        </div>
+
+                        <div class="col-lg-8 col-md-6 col-sm-12">
+                            <label for="ExaminerName" class="modern-label">
+                                <i class="fa-solid fa-user-doctor"></i>
+                                <span>أخصائي البصريات</span>
+                            </label>
+                            <input type="text" class="form-control modern-input" id="ExaminerName" name="ExaminerName" placeholder="أدخل اسم الفاحص..." tabindex="15">
+                        </div>
+
+                        <div class="col-12">
+                            <label for="Remarks" class="modern-label">
+                                <i class="fa-solid fa-notes-medical"></i>
+                                <span>ملاحظات طبية</span>
+                            </label>
+                            <input type="text" class="form-control modern-input" id="Remarks" name="Remarks" placeholder="أي ملاحظات طبية حول العين..." tabindex="16">
+                        </div>
+
+                        <div class="col-12">
+                            <label for="PurchaseNotes" class="modern-label">
+                                <i class="fa-solid fa-glasses"></i>
+                                <span>ملاحظات المعرض وتفاصيل العدسات</span>
+                            </label>
+                            <textarea class="form-control modern-input" id="PurchaseNotes" name="PurchaseNotes" placeholder="أدخل تفاصيل الإطار، نوع العدسات المباعة، الأسعار... (اضغط Enter لسطر جديد)" tabindex="17"></textarea>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer border-top-0 pt-0 px-4 pb-4">
+                <button type="button" class="btn btn-light rounded-3 px-4 py-2 fw-bold" data-bs-dismiss="modal">إلغاء</button>
+                <button type="button" id="btnSaveExam" class="btn btn-primary rounded-3 px-5 py-2 fw-bold shadow-sm d-flex align-items-center" style="background-color: var(--brand-color); border-color: var(--brand-color);" onclick="saveExam()" tabindex="18">
+                    <span id="btnSaveText">حفظ الفحص</span>
+                    <div id="btnSaveSpinner" class="spinner-border spinner-border-sm ms-2 d-none" role="status"></div>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="quickPatientModal" tabindex="-1" aria-hidden="true" style="z-index: 1060;">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content border-0 shadow-lg rounded-4">
+            <div class="modal-header border-bottom-0 pb-0 mt-3">
+                <h5 class="modal-title fw-bold px-3 text-primary"><i class="fa-solid fa-user-plus me-2"></i> تسجيل عميل سريع</h5>
+                <button type="button" class="btn-close me-3" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4">
+                <form id="quickPatientForm" class="needs-validation" novalidate>
+                    @Html.AntiForgeryToken()
+                    <div class="row g-3">
+                        <div class="col-md-4 col-sm-6">
+                            <label class="modern-label">الاسم الأول <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control modern-input" id="qpFirstName" name="firstName" required>
+                            <div class="invalid-feedback">مطلوب.</div>
+                        </div>
+                        <div class="col-md-4 col-sm-6">
+                            <label class="modern-label">اسم الأب <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control modern-input" id="qpFatherName" name="fatherName" required>
+                            <div class="invalid-feedback">مطلوب.</div>
+                        </div>
+                        <div class="col-md-4 col-sm-12">
+                            <label class="modern-label">اسم العائلة <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control modern-input" id="qpFamilyName" name="familyName" required>
+                            <div class="invalid-feedback">مطلوب.</div>
+                        </div>
+                        <div class="col-md-4 col-sm-6">
+                            <label class="modern-label">رقم الهاتف <span class="text-danger">*</span></label>
+                            <input type="tel" inputmode="numeric" class="form-control modern-input" style="direction: ltr; text-align: left;" id="qpPhoneNumber" name="phoneNumber" required minlength="9" maxlength="15" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+                            <div class="invalid-feedback">مطلوب.</div>
+                        </div>
+                        <div class="col-md-4 col-sm-6">
+                            <label class="modern-label">العمر <span class="text-danger">*</span></label>
+                            <input type="number" inputmode="numeric" class="form-control modern-input" id="qpAge" name="age" required min="1" max="120">
+                            <div class="invalid-feedback">مطلوب.</div>
+                        </div>
+                        <div class="col-md-4 col-sm-12">
+                            <label class="modern-label">العنوان <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control modern-input" id="qpAddress" name="address" required>
+                            <div class="invalid-feedback">مطلوب.</div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer border-top-0 pt-0 px-4 pb-4">
+                <button type="button" class="btn btn-light rounded-3 px-4 py-2 fw-bold" data-bs-dismiss="modal">تراجع</button>
+                <button type="button" id="btnSaveQuickPatient" class="btn btn-primary rounded-3 px-4 py-2 fw-bold shadow-sm" onclick="saveQuickPatient()">
+                    حفظ واختيار
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="imageModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg rounded-4 bg-transparent">
+            <div class="modal-header border-bottom-0 p-3 position-absolute w-100" style="z-index: 10;">
+                <button type="button" class="btn-close btn-close-white bg-dark rounded-circle p-2" data-bs-dismiss="modal" aria-label="Close" style="opacity: 0.8;"></button>
+            </div>
+            <div class="modal-body p-0 text-center">
+                <img id="examImageDisplay" src="" alt="صورة الفحص/النظارة" class="img-fluid rounded-4 shadow" style="max-height: 80vh; object-fit: contain; background: #fff;" />
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="printModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content border-0 shadow-lg rounded-4">
+            <div class="modal-header bg-light border-bottom-0 pb-3 mt-1 rounded-top-4">
+                <h5 class="modal-title fw-bold" style="color: var(--brand-color);">
+                    <i class="fa-solid fa-file-prescription me-2"></i> معاينة الوصفة الطبية
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4 pt-0">
+                <div id="printArea" class="prescription-card">
+                    <div class="prescription-header">
+                        <div class="prescription-logo">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512" style="fill: #7a1c4b; width: 45px; height: 45px; margin-bottom: 5px;"><path d="M224 256c70.7 0 128-57.3 128-128S294.7 0 224 0 96 57.3 96 128s57.3 128 128 128zm89.6 32h-16.7c-22.2 10.2-46.9 16-72.9 16s-50.6-5.8-72.9-16h-16.7C60.2 288 0 348.2 0 422.4V464c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48v-41.6c0-74.2-60.2-134.4-134.4-134.4zM464 256c70.7 0 128-57.3 128-128S534.7 0 464 0 336 57.3 336 128s57.3 128 128 128zm89.6 32h-16.7c-22.2 10.2-46.9 16-72.9 16s-50.6-5.8-72.9-16h-16.7c-74.2 0-134.4 60.2-134.4 134.4V464c0 26.5 21.5 48 48 48h224c26.5 0 48-21.5 48-48v-41.6c0-74.2-60.2-134.4-134.4-134.4z" /></svg>
+                        </div>
+                        <h2 class="fw-bold mb-1" style="color: var(--brand-color);">الخليج للبصريات</h2>
+                        <p class="text-muted mb-0 fw-bold">وصفة نظارات طبية - النسخة الرسمية</p>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center mb-4 px-2 flex-wrap gap-2">
+                        <div><span class="info-label">اسم المراجع:</span><span class="info-value text-primary fs-5" id="printPatientName"></span></div>
+                        <div class="text-start text-sm-end"><span class="info-label">تاريخ الفحص:</span><span class="info-value" id="printExamDate"></span></div>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="prescription-table">
+                            <thead>
+                                <tr>
+                                    <th>Eye</th>
+                                    <th>SPH</th>
+                                    <th>CYL</th>
+                                    <th>AXIS</th>
+                                    <th>ADD</th>
+                                    <th>V.A</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="eye-label text-danger">Right (OD)</td>
+                                    <td id="p_odSph"></td>
+                                    <td id="p_odCyl"></td>
+                                    <td id="p_odAxis"></td>
+                                    <td id="p_odAdd"></td>
+                                    <td id="p_odVA"></td>
+                                </tr>
+                                <tr>
+                                    <td class="eye-label text-primary">Left (OS)</td>
+                                    <td id="p_osSph"></td>
+                                    <td id="p_osCyl"></td>
+                                    <td id="p_osAxis"></td>
+                                    <td id="p_osAdd"></td>
+                                    <td id="p_osVA"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="prescription-info-grid">
+                        <div><span class="info-label">(IPD)</span><span class="info-value" id="printIPD" style="direction: ltr; display: inline-block;"></span></div>
+                        <div><span class="info-label">اسم أخصائي البصريات</span><span class="info-value" id="printExaminer"></span></div>
+                        <div style="grid-column: 1 / -1;"><span class="info-label">ملاحظات وتفاصيل أخرى</span><span class="info-value" id="printRemarks"></span></div>
+                    </div>
+
+                    <div class="mt-5 pt-3 border-top text-center text-muted fw-bold" style="font-size: 0.9rem;">
+                        نتمنى لكم دوام الصحة والعافية - شكراً لثقتكم بالخليج للبصريات
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer border-top-0 pt-0 px-4 pb-4">
+                <button type="button" class="btn btn-light rounded-3 px-4 py-2 fw-bold" data-bs-dismiss="modal">إغلاق المعاينة</button>
+                <button type="button" id="btnPrintAction" class="btn btn-primary rounded-3 px-5 py-2 fw-bold shadow-sm d-flex align-items-center" style="background-color: var(--brand-color); border-color: var(--brand-color);">
+                    <i class="fa-solid fa-file-pdf me-2"></i> طباعة / تحميل PDF
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- موديل التواصل (تم التعديل عليه لإضافة خيارات نوع الرسالة) -->
+<div class="modal fade" id="contactModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg rounded-4">
+            <div class="modal-header bg-light border-bottom-0 pb-3 mt-1 rounded-top-4">
+                <h5 class="modal-title fw-bold" style="color: #16a34a;">
+                    <i class="fa-brands fa-whatsapp me-2"></i> تواصل مع المريض
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4 pt-2">
+                <div class="text-center mb-4">
+                    <h5 class="fw-bold text-dark mb-1" id="contactPatientName"></h5>
+                    <span class="badge bg-primary px-3 py-2 mt-2" id="contactExamDate"></span>
+                </div>
+
+                <!-- إضافة خيارات نوع الرسالة -->
+                <div class="mb-4 bg-light p-3 rounded-3 border">
+                    <label class="form-label fw-bold small text-muted mb-3"><i class="fa-regular fa-comment-dots me-1"></i> اختر نوع الرسالة الموجهة للعميل:</label>
+                    <div class="d-flex gap-4">
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="msgType" id="msgReminder" value="reminder" checked>
+                            <label class="form-check-label fw-bold text-dark" for="msgReminder" style="cursor: pointer;">تذكير بموعد الفحص</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="msgType" id="msgWelcome" value="welcome">
+                            <label class="form-check-label fw-bold text-dark" for="msgWelcome" style="cursor: pointer;">ترحيب وشكر للزيارة</label>
+                        </div>
+                    </div>
+                </div>
+                <!-- نهاية إضافة الخيارات -->
+
+                <div id="contactPhonesContainer"></div>
+            </div>
+            <div class="modal-footer border-top-0 pt-0 px-4 pb-4">
+                <button type="button" class="btn btn-light rounded-3 px-4 py-2 fw-bold" data-bs-dismiss="modal">إلغاء</button>
+                <button type="button" id="btnMarkContacted" class="btn rounded-3 px-4 py-2 fw-bold shadow-sm d-flex align-items-center">
+                    <i class="fa-solid fa-check-double me-2"></i> <span>تأكيد إتمام التواصل</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.5.0/js/responsive.bootstrap5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.bootstrap5.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.print.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+    <script>
+        var examsTable;
+
+        function toggleSign(inputId, sign) {
+        var input = document.getElementById(inputId);
+        if (!input) return;
+        var val = input.value.replace(/\+/g, '').replace(/\-/g, '');
+        input.value = sign + val;
+        input.focus();
+        }
+
+        function setSmartDate(months) {
+        let today = new Date();
+        let currentDay = today.getDate();
+        let targetMonth = today.getMonth() + months;
+        let d = new Date(today.getFullYear(), targetMonth, currentDay);
+        if (d.getMonth() !== targetMonth % 12 && targetMonth % 12 !== -1) { d.setDate(0); }
+        let yyyy = d.getFullYear();
+        let mm = String(d.getMonth() + 1).padStart(2, '0');
+        let dd = String(d.getDate()).padStart(2, '0');
+        $('#NextExamDate').val(`${yyyy}-${mm}-${dd}`);
+        $('#NextExamDate').removeClass('is-invalid').addClass('is-valid');
+        }
+
+        function previewFileName(input) {
+        const textSpan = $('#uploadText span'); const icon = $('#uploadText i'); const wrapper = $('#uploadWrapper');
+        if (input.files && input.files[0]) {
+        textSpan.text(input.files[0].name);
+        icon.removeClass('fa-camera text-muted').addClass('fa-image text-primary');
+        wrapper.css('border-color', 'var(--brand-color)');
+        } else {
+        textSpan.text('التقط أو ارفع صورة');
+        icon.removeClass('fa-image text-primary').addClass('fa-camera text-muted');
+        wrapper.css('border-color', '#cbd5e1');
+        }
+        }
+
+        function resetUploadBox() {
+        $('#ImageFile').val('');
+        $('#uploadText span').text('التقط أو ارفع صورة');
+        $('#uploadText i').removeClass('fa-image text-primary fa-check text-success').addClass('fa-camera text-muted');
+        $('#uploadWrapper').css('border-color', '#cbd5e1');
+        }
+
+        function generateWaLink(phone, message) {
+        if (!phone) return '#';
+        let pStr = phone.replace(/\D/g, '');
+        if (pStr.startsWith('07') && pStr.length === 10) { pStr = '962' + pStr.substring(1); }
+        else if (pStr.startsWith('7') && pStr.length === 9) { pStr = '962' + pStr; }
+        else if (pStr.startsWith('00962')) { pStr = pStr.substring(2); }
+        return `https://wa.me/${pStr}?text=${message}`;
+        }
+
+        function viewImage(examId) {
+        Swal.fire({ title: 'جاري جلب الصورة...', allowOutsideClick: false, didOpen: () => { Swal.showLoading() } });
+        $.get('/ExaminationsController1/GetExamById', { id: examId })
+        .done(function (res) {
+        Swal.close();
+        if (res.success && res.data.glassImagePath) {
+        $('#examImageDisplay').attr('src', res.data.glassImagePath);
+        $('#imageModal').modal('show');
+        } else { Swal.fire('تنبيه', 'لا يوجد صورة مرفقة مع هذا الفحص.', 'info'); }
+        }).fail(function() { Swal.fire('خطأ!', 'فصل الاتصال بالسيرفر.', 'error'); });
+        }
+
+        $(document).ready(function () {
+
+        $('#examForm').on('keydown', 'input:not([type="hidden"]):not([type="file"]), select, textarea', function(e) {
+        if (e.key === 'Enter') {
+        if($(this).is('textarea')) return;
+        e.preventDefault();
+
+        var currentTabIndex = parseInt($(this).attr('tabindex'));
+        if (!isNaN(currentTabIndex)) {
+        var nextElement = $('[tabindex="' + (currentTabIndex + 1) + '"]');
+        if (nextElement.length) {
+        nextElement.focus();
+        } else {
+        $('#btnSaveExam').focus();
+        }
+        }
+        }
+        });
+
+        $('#quickPatientForm').on('keydown', 'input', function(e) {
+        if (e.key === 'Enter') {
+        e.preventDefault();
+        var inputs = $('#quickPatientForm').find('input:not([type="hidden"])');
+        var index = inputs.index(this);
+        if (index > -1 && index < inputs.length - 1) { inputs.eq(index + 1).focus(); }
+        else if (index === inputs.length - 1) { saveQuickPatient(); }
+        }
+        });
+
+        $('#PatientId').select2({
+        dropdownParent: $('#examModal'),
+        placeholder: "اضغط للبحث عن اسم المريض أو رقمه...",
+        allowClear: true,
+        language: { noResults: function () { return "لا يوجد نتائج، يرجى التأكد من الاسم أو الرقم"; }, searching: function () { return "جاري البحث بالداتا بيس..."; } },
+        ajax: {
+        url: '/ExaminationsController1/SearchPatients', dataType: 'json', delay: 250,
+        data: function (params) { return { term: params.term }; },
+        processResults: function (data) { return { results: data }; }
+        }
+        });
+
+        examsTable = $('#examsTable').DataTable({
+        ajax: { url: '/ExaminationsController1/GetExamsData', type: 'GET', datatype: 'json' },
+        dom: '<"top-controls-wrapper"<"left-controls d-flex align-items-center gap-4"lB>f>rt<"row align-items-center mt-3"<"col-md-6"i><"col-md-6"p>>',
+        buttons: [
+        { extend: 'excelHtml5', text: '<i class="fa-solid fa-file-excel text-success"></i> إكسيل', className: 'btn', exportOptions: { columns: [0, 1, 2, 3], orthogonal: 'export' } },
+        { extend: 'print', text: '<i class="fa-solid fa-print text-secondary"></i> طباعة القائمة', className: 'btn', exportOptions: { columns: [0, 1, 2, 3], orthogonal: 'export' }, customize: function (win) { $(win.document.body).css('direction', 'rtl').css('text-align', 'right'); $(win.document.body).find('table').addClass('table-bordered').css('font-size', '14pt'); } }
+        ],
+        columns: [
+        {
+        data: 'examDate', responsivePriority: 2,
+        render: function(data, type, row) {
+        var date = new Date(data);
+        if(type === 'display') {
+        return `<div class="d-flex flex-column"><span class="fw-bold text-dark">${date.toLocaleDateString('ar-JO')}</span><span class="text-muted small"><i class="fa-regular fa-clock"></i> ${date.toLocaleTimeString('ar-JO', {hour: '2-digit', minute:'2-digit'})}</span></div>`;
+        }
+        return date.toLocaleDateString('ar-JO') + " - " + date.toLocaleTimeString('ar-JO', {hour: '2-digit', minute:'2-digit'});
+        }
+        },
+        { data: 'patientName', responsivePriority: 1, render: function(data, type, row) { if(type === 'display') return `<span class="fw-bold" style="color: var(--brand-color); font-size: 1.05rem;">${data}</span>`; return data; } },
+        {
+        data: 'phoneNumber', responsivePriority: 4,
+        render: function(data, type, row) {
+        if(type === 'display') {
+        let primaryPhone = `<div class="fw-bold text-dark" style="direction:ltr; text-align: right;">${data}</div>`;
+        let secondaryPhone = '';
+        if(row.secondaryPhoneNumber) {
+        let noteBadge = row.secondaryPhoneOwner ? `<span class="badge bg-light text-secondary border ms-2 px-2 py-1">${row.secondaryPhoneOwner}</span>` : '';
+        secondaryPhone = `<div class="mt-1 d-flex align-items-center justify-content-end flex-wrap gap-1" style="font-size: 0.85rem;">${noteBadge}<span class="text-muted" style="direction:ltr;"><i class="fa-solid fa-phone-arrow-up-right fa-xs me-1"></i>${row.secondaryPhoneNumber}</span></div>`;
+        }
+        return primaryPhone + secondaryPhone;
+        }
+        let plainText = data ? data + " " : "";
+        if(row.secondaryPhoneNumber) {
+        let note = row.secondaryPhoneOwner ? ` (${row.secondaryPhoneOwner})` : '';
+        plainText += ` | احتياطي: ${row.secondaryPhoneNumber}${note}`;
+        }
+        return plainText;
+        }
+        },
+        {
+        data: 'nextExamDate', responsivePriority: 5,
+        render: function(data, type, row) {
+        if(!data) return type === 'display' ? '<span class="text-muted">-</span>' : 'لا يوجد موعد';
+        var d = new Date(data);
+        if(type === 'display') {
+        var today = new Date(); today.setHours(0,0,0,0);
+        var badgeClass = d < today ? 'bg-danger text-white' : (d.getTime() === today.getTime() ? 'bg-warning text-dark' : 'bg-success text-white');
+        var reminderBadge = '';
+        if(row.isReminderSent) { reminderBadge = `<div class="mt-1"><span class="badge bg-success" style="font-size: 0.75rem;"><i class="fa-solid fa-check-double me-1"></i>تم التذكير</span></div>`; }
+        else if(d <= new Date(today.getTime() + (14 * 24 * 60 * 60 * 1000))) { reminderBadge = `<div class="mt-1"><span class="badge bg-secondary" style="font-size: 0.75rem;"><i class="fa-regular fa-clock me-1"></i>بانتظار التواصل</span></div>`; }
+        return `<div class="d-flex flex-column align-items-start"><span class="badge ${badgeClass} px-2 py-1 mb-1" style="font-size: 0.85rem;"><i class="fa-regular fa-calendar-check me-1"></i> ${d.toLocaleDateString('ar-JO')}</span>${reminderBadge}</div>`;
+        }
+        let excelText = d.toLocaleDateString('ar-JO');
+        if(row.isReminderSent) excelText += " (تم التواصل)";
+        return excelText;
+        }
+        },
+        {
+        data: 'id', orderable: false, responsivePriority: 3,
+        render: function (data, type, row) {
+        var safeName = encodeURIComponent(row.patientName || '');
+        var phone = row.phoneNumber || '';
+        var imgBtn = row.hasImage ? `<button class="btn-action btn-image" onclick="viewImage(${data})" title="عرض صورة النظارة"><i class="fa-regular fa-image"></i></button>` : ``;
+        return `<div class="actions-wrapper">${imgBtn}<button class="btn-action btn-contact" onclick="openContactModal(${data})" title="تواصل وتذكير"><i class="fa-brands fa-whatsapp"></i></button><button class="btn-action btn-view" onclick="printExam(${data}, '${safeName}', '${phone}')" title="معاينة وطباعة الوصفة"><i class="fa-solid fa-print"></i></button><button class="btn-action btn-edit" onclick="editExam(${data}, '${safeName}')" title="تعديل الفحص"><i class="fa-solid fa-pen"></i></button><button class="btn-action btn-delete" onclick="deleteExam(${data})" title="حذف الفحص"><i class="fa-solid fa-trash"></i></button></div>`;
+        }
+        }
+        ],
+        language: { url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/ar.json' },
+        ordering: false, responsive: true
+        });
+        });
+
+        function openContactModal(examId) {
+        Swal.fire({ title: 'جاري جلب البيانات...', allowOutsideClick: false, didOpen: () => { Swal.showLoading() } });
+
+        $.get('/ExaminationsController1/GetContactInfo', { id: examId })
+        .done(function (res) {
+        Swal.close();
+        if (res.success) {
+        var d = res.data;
+        $('#contactPatientName').text(d.patientName);
+        $('#contactExamDate').html(`<i class="fa-regular fa-calendar-check me-1"></i> الموعد القادم: ${d.nextExamDateStr}`);
+
+        // دالة داخلية لتحديث روابط الواتساب بناءً على نوع الرسالة المختارة
+        function updateLinks() {
+        var msgType = $('input[name="msgType"]:checked').val();
+        var waMsg = "";
+
+        // تحديد النص بناءً على الخيار
+        if (msgType === 'reminder') {
+        waMsg = encodeURIComponent(`مرحباً أستاذ ${d.patientName}، معك الخليج للبصريات. نود تذكيرك بأن موعد فحصك الدوري المجاني قد حان بتاريخ ${d.nextExamDateStr}. نتشرف بزيارتك! 👓`);
+        } else if (msgType === 'welcome') {
+        waMsg = encodeURIComponent(`مرحباً أستاذ ${d.patientName}، أهلاً بك في الخليج للبصريات. سعدنا بزيارتك ونتمنى أن تكون تجربتك معنا مميزة، نحن دائماً بخدمتك! 👓`);
+        }
+
+        var container = $('#contactPhonesContainer');
+        container.empty();
+
+        var primaryLink = generateWaLink(d.primaryPhone, waMsg);
+        var phonesHtml = `<div class="d-flex justify-content-between align-items-center bg-light p-3 rounded-3 mb-3 border flex-wrap gap-2"><div class="fw-bold" style="direction:ltr; font-size:1.1rem;">${d.primaryPhone} <span class="badge bg-secondary ms-1 fs-6">أساسي</span></div><a href="${primaryLink}" target="_blank" class="btn btn-success rounded-3 px-4 d-flex align-items-center gap-2" style="text-decoration: none;"><i class="fa-brands fa-whatsapp fs-5"></i> <span>مراسلة</span></a></div>`;
+
+        if (d.secondaryPhone) {
+        var secondaryLink = generateWaLink(d.secondaryPhone, waMsg);
+        var note = d.secondaryPhoneOwner ? d.secondaryPhoneOwner : 'احتياطي';
+        phonesHtml += `<div class="d-flex justify-content-between align-items-center bg-light p-3 rounded-3 border-start border-3 border-success mb-3 flex-wrap gap-2"><div class="fw-bold" style="direction:ltr; font-size:1.1rem;">${d.secondaryPhone} <span class="badge bg-white text-dark border ms-1 fs-6">${note}</span></div><a href="${secondaryLink}" target="_blank" class="btn btn-outline-success rounded-3 bg-white px-4 d-flex align-items-center gap-2" style="text-decoration: none;"><i class="fa-brands fa-whatsapp fs-5"></i> <span>مراسلة</span></a></div>`;
+        }
+        container.html(phonesHtml);
+        }
+
+        // ربط تغيير الخيار بتحديث الروابط مباشرة
+        $('input[name="msgType"]').off('change').on('change', updateLinks);
+
+        // إعادة تعيين الخيار الافتراضي للتذكير عند فتح المودال وبناء الأزرار
+        $('#msgReminder').prop('checked', true);
+        updateLinks();
+
+        // كود زر تأكيد التواصل
+        var btnMark = $('#btnMarkContacted');
+        if(d.isReminderSent) {
+        btnMark.attr('style', 'background-color: #198754 !important; color: #ffffff !important; border: none !important;');
+        btnMark.html('<i class="fa-solid fa-check me-2"></i> <span>تم التواصل مسبقاً</span>');
+        btnMark.prop('disabled', true);
+        } else {
+        btnMark.attr('style', 'background-color: #f1f5f9 !important; color: #475569 !important; border: 1px solid #cbd5e1 !important;');
+        btnMark.html('<i class="fa-solid fa-check-double me-2"></i> <span>تأكيد إتمام التواصل</span>');
+        btnMark.prop('disabled', false);
+
+        // التعديل: هنا تم إضافة سؤال تجديد الموعد
+        btnMark.off('click').on('click', function() {
+        $('#contactModal').modal('hide');
+
+        Swal.fire({
+        title: 'تم التواصل بنجاح 👏',
+        text: 'هل ترغب بجدولة موعد تذكير جديد لهذا العميل بعد 6 أشهر من اليوم؟',
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonColor: '#16a34a',
+        cancelButtonColor: '#64748b',
+        confirmButtonText: 'نعم، ذكّرني بعد 6 أشهر ⏱️',
+        cancelButtonText: 'لا، فقط أخفِ التنبيه ✖️'
+        }).then((result) => {
+        let renew = result.isConfirmed;
+
+        Swal.fire({ title: 'جاري الحفظ...', allowOutsideClick: false, didOpen: () => { Swal.showLoading() } });
+
+        $.post('/ExaminationsController1/MarkAsContacted', { id: d.examId, renewForSixMonths: renew })
+        .done(function (markRes) {
+        if (markRes.success) {
+        let toastMsg = renew ? 'تم إخفاء التنبيه وجدولة موعد جديد بعد 6 أشهر' : 'تم إخفاء التنبيه بنجاح';
+        Swal.fire({ toast: true, position: 'bottom-end', icon: 'success', title: toastMsg, showConfirmButton: false, timer: 4000 });
+
+        examsTable.ajax.reload(null, false);
+        if(typeof loadSmartNotifications === "function") { loadSmartNotifications(); }
+        } else {
+        Swal.fire('خطأ', 'لم يتم الحفظ.', 'error');
+        }
+        })
+        .fail(function() { Swal.fire('خطأ!', 'فصل الاتصال بالسيرفر.', 'error'); });
+        });
+        });
+        }
+        $('#contactModal').modal('show');
+        } else { Swal.fire('خطأ', res.message, 'error'); }
+        }).fail(function() { Swal.fire('خطأ!', 'فصل الاتصال بالسيرفر.', 'error'); });
+        }
+        function openExamModal() {
+        $('#examForm')[0].reset(); $('#examForm').removeClass('was-validated');
+        $('#examId').val(0); $('#PatientId').val(null).trigger('change'); resetUploadBox();
+        $('#quickAddPatientWrapper').show();
+        $('#modalTitle').text('إضافة فحص طبي جديد'); $('#examModal').modal('show');
+        setTimeout(() => { $('#PatientId').select2('open'); }, 300);
+        }
+
+        function openQuickPatientModal() {
+        $('#quickPatientForm')[0].reset();
+        $('#quickPatientForm').removeClass('was-validated');
+        $('#quickPatientModal').modal('show');
+        setTimeout(() => { $('#qpFirstName').focus(); }, 300);
+        }
+
+        function saveQuickPatient() {
+        var form = $('#quickPatientForm');
+        if (!form[0].checkValidity()) {
+        form.addClass('was-validated');
+        return;
+        }
+        var btn = $('#btnSaveQuickPatient');
+        var originalText = btn.text();
+        btn.prop('disabled', true).html('<i class="fa-solid fa-spinner fa-spin"></i>');
+
+        $.post('/ExaminationsController1/CreatePatientQuickly', form.serialize())
+        .done(function (res) {
+        if (res.success) {
+        $('#quickPatientModal').modal('hide');
+        Swal.fire({ toast: true, position: 'top-end', icon: 'success', title: res.message, showConfirmButton: false, timer: 2000 });
+        var newOption = new Option(res.patientName, res.patientId, true, true);
+        $('#PatientId').append(newOption).trigger('change');
+        $('#NextExamDate').focus();
+        } else {
+        Swal.fire('خطأ', res.message, 'error');
+        }
+        })
+        .fail(function() { Swal.fire('خطأ', 'فشل الاتصال بالسيرفر.', 'error'); })
+        .always(function() { btn.prop('disabled', false).text(originalText); });
+        }
+
+        function editExam(id, encodedName) {
+        Swal.fire({ title: 'جاري جلب الملف...', allowOutsideClick: false, didOpen: () => { Swal.showLoading() } });
+        $.get('/ExaminationsController1/GetExamById', { id: id })
+        .done(function (res) {
+        Swal.close();
+        if (res.success) {
+        var data = res.data;
+        $('#examForm')[0].reset(); $('#examForm').removeClass('was-validated'); resetUploadBox();
+        $('#examId').val(data.id);
+        var pName = decodeURIComponent(encodedName);
+        var newOption = new Option(pName, data.patientId, true, true);
+        $('#PatientId').append(newOption).trigger('change');
+
+        $('#quickAddPatientWrapper').hide();
+
+        if(data.nextExamDate) { $('#NextExamDate').val(data.nextExamDate.substring(0, 10)); } else { $('#NextExamDate').val(''); }
+
+        $('#ODSph').val(data.odSph); $('#ODCyl').val(data.odCyl); $('#ODAxis').val(data.odAxis); $('#ODAdd').val(data.odAdd);
+        $('#ODVA').val(data.odva ?? data.odVa ?? data.odVA);
+
+        $('#OSSph').val(data.osSph); $('#OSCyl').val(data.osCyl); $('#OSAxis').val(data.osAxis); $('#OSAdd').val(data.osAdd);
+        $('#OSVA').val(data.osva ?? data.osVa ?? data.osVA);
+
+        $('#IPD').val(data.ipd); $('#Remarks').val(data.remarks); $('#PurchaseNotes').val(data.purchaseNotes); $('#ExaminerName').val(data.examinerName);
+
+        if(data.glassImagePath) {
+        $('#uploadText span').text('يوجد صورة محفوظة (تغيير)');
+        $('#uploadText i').removeClass('fa-camera text-muted').addClass('fa-check text-success');
+        $('#uploadWrapper').css('border-color', '#22c55e');
+        }
+        $('#modalTitle').text('تعديل بيانات الفحص'); $('#examModal').modal('show');
+        } else { Swal.fire('خطأ!', res.message, 'error'); }
+        }).fail(function() { Swal.fire('خطأ!', 'لا يمكن الاتصال بالخادم لجلب البيانات.', 'error'); });
+        }
+
+        function saveExam() {
+        var form = $('#examForm')[0];
+        if (!form.checkValidity()) {
+        $('#examForm').addClass('was-validated');
+        Swal.fire({ icon: 'warning', title: 'بيانات ناقصة', text: 'يرجى اختيار العميل وتحديد الموعد القادم.', confirmButtonColor: '#d33' });
+        return;
+        }
+        $('#btnSaveExam').prop('disabled', true); $('#btnSaveText').text('جاري الحفظ...'); $('#btnSaveSpinner').removeClass('d-none');
+        var formData = new FormData(form); var id = $('#examId').val();
+        var url = id == 0 ? '/ExaminationsController1/Create' : '/ExaminationsController1/Edit';
+        $.ajax({
+        url: url, type: 'POST', data: formData, processData: false, contentType: false,
+        success: function (res) {
+        if (res.success) {
+        $('#examModal').modal('hide');
+        Swal.fire({ icon: 'success', title: 'تمت العملية!', text: res.message, confirmButtonColor: 'var(--brand-color)', timer: 2000, showConfirmButton: false });
+        examsTable.ajax.reload(null, false);
+        if(typeof loadSmartNotifications === "function") { loadSmartNotifications(); }
+        } else { Swal.fire('تنبيه', res.message, 'error'); }
+        },
+        error: function () { Swal.fire('خطأ!', 'حدثت مشكلة في الاتصال.', 'error'); },
+        complete: function () { $('#btnSaveExam').prop('disabled', false); $('#btnSaveText').text('حفظ الفحص'); $('#btnSaveSpinner').addClass('d-none'); }
+        });
+        }
+
+        function deleteExam(id) {
+        Swal.fire({
+        title: 'حذف الفحص؟', text: "لا يمكن التراجع!", icon: 'warning',
+        showCancelButton: true, confirmButtonColor: '#ef4444', cancelButtonColor: '#828c9b',
+        confirmButtonText: 'نعم، احذف', cancelButtonText: 'تراجع', reverseButtons: true
+        }).then((result) => {
+        if (result.isConfirmed) {
+        Swal.fire({ title: 'جاري الحذف...', allowOutsideClick: false, didOpen: () => { Swal.showLoading() } });
+        var token = $('input[name="__RequestVerificationToken"]').val();
+        $.post('/ExaminationsController1/Delete', { id: id, __RequestVerificationToken: token })
+        .done(function (res) {
+        Swal.close();
+        if (res.success) {
+        Swal.fire({ icon: 'success', title: 'تم الحذف!', text: res.message, timer: 1500, showConfirmButton: false });
+        examsTable.ajax.reload(null, false);
+        if(typeof loadSmartNotifications === "function") { loadSmartNotifications(); }
+        } else { Swal.fire('خطأ!', res.message, 'error'); }
+        }).fail(function(xhr) {
+        if(xhr.status === 403) { Swal.fire('مرفوض!', 'ليس لديك صلاحية للحذف.', 'error'); }
+        else { Swal.fire('خطأ!', 'فصل الاتصال بالسيرفر.', 'error'); }
+        });
+        }
+        });
+        }
+
+        function printExam(id, encodedName, phone) {
+        var patientName = decodeURIComponent(encodedName);
+        Swal.fire({ title: 'تجهيز الوصفة...', allowOutsideClick: false, didOpen: () => { Swal.showLoading() } });
+        $.get('/ExaminationsController1/GetExamById', { id: id })
+        .done(function (res) {
+        Swal.close();
+        if (res.success) {
+        var d = res.data;
+        var examDate = new Date(d.examDate).toLocaleDateString('ar-JO');
+        const checkVal = (val) => (val === null || val === undefined || val === '') ? '<span class="text-muted small fw-normal">غير موجود</span>' : val;
+        $('#printPatientName').text(patientName); $('#printExamDate').text(examDate);
+
+        $('#p_odSph').html(checkVal(d.odSph)); $('#p_odCyl').html(checkVal(d.odCyl)); $('#p_odAxis').html(checkVal(d.odAxis)); $('#p_odAdd').html(checkVal(d.odAdd));
+        $('#p_odVA').html(checkVal(d.odva ?? d.odVa ?? d.odVA));
+
+        $('#p_osSph').html(checkVal(d.osSph)); $('#p_osCyl').html(checkVal(d.osCyl)); $('#p_osAxis').html(checkVal(d.osAxis)); $('#p_osAdd').html(checkVal(d.osAdd));
+        $('#p_osVA').html(checkVal(d.osva ?? d.osVa ?? d.osVA));
+
+        $('#printIPD').html(checkVal(d.ipd)); $('#printExaminer').html(checkVal(d.examinerName));
+
+        var allRemarks = "";
+        if(d.remarks) allRemarks += d.remarks;
+        if(d.purchaseNotes) allRemarks += (allRemarks ? " | " : "") + d.purchaseNotes;
+
+        var formattedRemarks = allRemarks.replace(/\n/g, '<br>');
+        $('#printRemarks').html(checkVal(formattedRemarks));
+
+        $('#btnPrintAction').off('click').on('click', function() {
+        var cleanName = patientName.replace(/\s+/g, '_'); var newTitle = `وصفة_طبية_${cleanName}_${phone}`;
+        var printContents = document.getElementById('printArea').innerHTML;
+        var printWindow = window.open('', '_blank', 'width=900,height=700');
+        var htmlTemplate = `
+        <html dir="rtl" lang="ar">
+        <head>
+        <title>${newTitle}</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+        <style>
+        body { font-family: 'Cairo', sans-serif; background: #fff; padding: 20px; color: #1e293b; }
+        .prescription-card { max-width: 800px; margin: auto; border: 2px solid #eaedf2; border-radius: 12px; padding: 2rem; }
+        .prescription-header { text-align: center; border-bottom: 2px dashed #e2e8f0; padding-bottom: 1.5rem; margin-bottom: 1.5rem; }
+        h2 { color: #7a1c4b; font-weight: bold; margin-bottom: 5px; font-size: 1.8rem; }
+        .prescription-table { width: 100%; text-align: center; direction: ltr; border-collapse: collapse; margin-bottom: 1.5rem; }
+        .prescription-table th { background-color: #f8fafc; padding: 12px; border: 1px solid #e2e8f0; font-weight: 700; color: #475569; font-size: 0.9rem; }
+        .prescription-table td { padding: 12px; border: 1px solid #e2e8f0; font-weight: 700; color: #1e293b; font-size: 1.05rem; }
+        .eye-label { background-color: #f1f5f9 !important; font-weight: 800 !important; font-size: 0.9rem !important; }
+        .prescription-info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; background: #f8fafc; padding: 1.5rem; border-radius: 10px; margin-bottom: 15px; border: 1px solid #eaedf2; text-align: right; }
+        .info-label { font-size: 0.85rem; color: #64748b; display: block; margin-bottom: 6px; font-weight: 600; }
+        .info-value { font-weight: 700; color: #1e293b; font-size: 1.05rem; }
+        .text-danger { color: #dc3545 !important; }
+        .text-primary { color: #0d6efd !important; }
+        .text-muted { color: #6c757d !important; }
+        .text-end { text-align: left !important; }
+        @@media print { body { -webkit-print-color-adjust: exact; print-color-adjust: exact; } }
+        </style>
+        </head>
+        <body><div class="prescription-card">${printContents}</div><script>window.onload = function() { setTimeout(function() { window.print(); window.close(); }, 500); }<\/script></body></html>`;
+        printWindow.document.write(htmlTemplate); printWindow.document.close();
+        });
+        $('#printModal').modal('show');
+        } else { Swal.fire('خطأ', res.message, 'error'); }
+        }).fail(function() { Swal.fire('خطأ!', 'فصل الاتصال بالسيرفر.', 'error'); });
+        }
+    </script>
+}
